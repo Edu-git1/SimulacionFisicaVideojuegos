@@ -7,6 +7,7 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
+#include "Particle.h"
 
 #include <iostream>
 
@@ -20,13 +21,17 @@ PxDefaultErrorCallback	gErrorCallback;
 PxFoundation*			gFoundation = NULL;
 PxPhysics*				gPhysics	= NULL;
 
-
 PxMaterial*				gMaterial	= NULL;
 
 PxPvd*                  gPvd        = NULL;
 
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
+
+
+Particle*				gParticula	= NULL;
+
+
 ContactReportCallback gContactReportCallback;
 
 
@@ -52,6 +57,9 @@ void initPhysics(bool interactive)
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
+
+	gParticula = new Particle({0,0,0}, {1, 1, 0});
+
 	gScene = gPhysics->createScene(sceneDesc);
 	}
 
@@ -65,6 +73,8 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+
+	gParticula->Update(0.005);
 }
 
 // Function to clean data
