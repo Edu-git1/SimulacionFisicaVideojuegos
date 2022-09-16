@@ -3,7 +3,7 @@
 
 class Particle {
 public:
-	Particle(Vector3 pos, Vector3 vel);
+	Particle(Vector3 pos, Vector3 vel, Vector3 damp);
 
 	~Particle();
 
@@ -11,6 +11,7 @@ public:
 
 private:
 
+	Vector3 damp;
 	Vector3 velocidad;
 	physx::PxTransform pose;
 	RenderItem* renderItem;
