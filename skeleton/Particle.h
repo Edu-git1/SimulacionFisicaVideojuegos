@@ -3,16 +3,18 @@
 
 class Particle {
 public:
-	Particle(Vector3 pos, Vector3 vel, Vector3 damp);
+	Particle(Vector3 pos, Vector3 vel, double damp, double aceleracion, double mass);
 
 	~Particle();
 
-	void Update(double t);
+	virtual void Update(double t);
 
 private:
 
-	Vector3 damp;
+	double damp;
 	Vector3 velocidad;
+	double acc;
+	Vector3 posi;
 	physx::PxTransform pose;
 	RenderItem* renderItem;
 };

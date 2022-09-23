@@ -34,6 +34,8 @@ Particle*				gParticula	= NULL;
 
 ContactReportCallback gContactReportCallback;
 
+enum CurrentShotType{PISTOL, ARTILLERY, FIREBALL};
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -58,7 +60,9 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 
-	gParticula = new Particle({ 0,0,0 }, { 1, 1, 0 }, { 0,0,0 });
+	gParticula = new Particle({ 0,0,0 }, { 0, 1, 0 }, 0.9, 0.1, 0);
+
+	CurrentShotType shot = PISTOL;
 
 	gScene = gPhysics->createScene(sceneDesc);
 	}
@@ -117,6 +121,13 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
+}
+
+void createShot(CurrentShotType shot) {
+	switch (shot) {
+	case PISTOL:
+
+	}
 }
 
 
