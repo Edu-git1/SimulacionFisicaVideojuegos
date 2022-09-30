@@ -14,28 +14,30 @@
 
 
 using namespace physx;
+using namespace std;
 
 PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
 
-PxFoundation*			gFoundation = NULL;
-PxPhysics*				gPhysics	= NULL;
+PxFoundation* gFoundation = NULL;
+PxPhysics* gPhysics = NULL;
 
-PxMaterial*				gMaterial	= NULL;
+PxMaterial* gMaterial = NULL;
 
-PxPvd*                  gPvd        = NULL;
+PxPvd* gPvd = NULL;
 
-PxDefaultCpuDispatcher*	gDispatcher = NULL;
-PxScene*				gScene      = NULL;
+PxDefaultCpuDispatcher* gDispatcher = NULL;
+PxScene* gScene = NULL;
 
 
-Particle*				gParticula	= NULL;
+Particle* gParticula = NULL;
+
+vector<Particle*> proyectiles;
 
 
 ContactReportCallback gContactReportCallback;
 
-enum CurrentShotType{PISTOL, ARTILLERY, FIREBALL};
-
+shotType currentShot = PISTOL;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -46,9 +48,9 @@ void initPhysics(bool interactive)
 
 	gPvd = PxCreatePvd(*gFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-	gPvd->connect(*transport,PxPvdInstrumentationFlag::eALL);
+	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
+	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
@@ -60,12 +62,8 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 
-	gParticula = new Particle({ 0,0,0 }, { 0, 1, 0 }, 0.9, 0.1, 0);
-
-	CurrentShotType shot = PISTOL;
-
 	gScene = gPhysics->createScene(sceneDesc);
-	}
+}
 
 
 // Function to configure what happens in each step of physics
@@ -78,7 +76,13 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	gParticula->Update(0.005);
+	for (int i = 0; i < proyectiles.size(); i++) {
+			proyectiles[i]->Update(t);
+			if (proyectiles[i]->getPosition().y < 0.0f || proyectiles[i]->getTime() <= 0 || proyectiles[i]->getPosition().z > 200.0f){
+				delete proyectiles[i];
+				proyectiles.erase(proyectiles.begin()+i);
+			}
+	}
 }
 
 // Function to clean data
@@ -104,13 +108,53 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
-	switch(toupper(key))
+	switch(key)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-	case ' ':
-	{
+		case ' ':
+		{
+			break;
+		}
+	case 'p':
+		if (currentShot == PISTOL) {
+			currentShot = FIREBALL;
+		}
+		else if (currentShot == FIREBALL) {
+			currentShot = CANONBALL;
+		}
+		else {
+			currentShot = PISTOL;
+		}
 		break;
+	case 'q':
+	{
+		Vector3 eye = GetCamera()->getEye();
+		Vector3 dir = GetCamera()->getDir();
+		switch (currentShot) {
+		case PISTOL:
+		{
+			Particle* bullet = new Particle(eye, dir * 35.f, 0.99f, Vector3(0, -1.f, 0), 2.f, 5000);
+			bullet->setColor(Vector4(0, 1, 0, 1));
+			proyectiles.push_back(bullet);
+			break;
+		}
+		case FIREBALL:
+		{
+			Particle* bullet = new Particle(eye, dir * 10.f, 0.9f, Vector3(0, 0.6f, 0), 1.f, 5000);
+			bullet->setColor(Vector4(1, 0, 0, 1));
+			proyectiles.push_back(bullet);
+			break;
+		}
+		case CANONBALL:
+		{
+			Particle* bullet = new Particle(eye, Vector3(dir.x * 40.f, dir.y * 30.f, dir.z * 40.f), 0.99f, Vector3(0, -9.8f, 0), 200.f, 5000);
+			bullet->setColor(Vector4(0, 0, 1, 1));
+			proyectiles.push_back(bullet);
+			break;
+		}
+		break;
+		}
 	}
 	default:
 		break;
@@ -121,13 +165,6 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
-}
-
-void createShot(CurrentShotType shot) {
-	switch (shot) {
-	case PISTOL:
-
-	}
 }
 
 

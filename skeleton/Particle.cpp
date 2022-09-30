@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-Particle::Particle(Vector3 pos, Vector3 vel, double damping, double aceleracion, double mass)
+Particle::Particle(Vector3 pos, Vector3 vel, double damping, Vector3 aceleracion, double mass, double time)
 {
 	velocidad = vel;
 
@@ -12,7 +12,11 @@ Particle::Particle(Vector3 pos, Vector3 vel, double damping, double aceleracion,
 
 	acc = aceleracion;
 
+	masa = mass;
+
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(1.0)), &pose, { 0.5, 0, 0.5, 1 });
+
+	startTime = time;
 
 }
 
@@ -23,8 +27,11 @@ Particle::~Particle()
 
 void Particle::Update(double t)
 {
-	velocidad += acc * t * Vector3(1, 1, 1);
+	velocidad += acc * t *masa;
 	velocidad *= pow(damp, t);
 	posi += velocidad*t;
 	pose = physx::PxTransform(posi);
+	if (startTime != 0) {
+		decreaseTime();
+	}
 }
