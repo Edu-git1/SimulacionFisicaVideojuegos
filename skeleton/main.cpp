@@ -134,7 +134,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		switch (currentShot) {
 		case PISTOL:
 		{
-			Particle* bullet = new Particle(eye, dir * 35.f, 0.99f, Vector3(0, -1.f, 0), 2.f, 5000);
+			Particle* bullet = new Particle(eye, dir * 80.f, 0.99f, Vector3(0, -1.f, 0), 2.f, 5000);
 			bullet->setColor(Vector4(0, 1, 0, 1));
 			proyectiles.push_back(bullet);
 			break;
@@ -148,7 +148,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 		case CANONBALL:
 		{
-			Particle* bullet = new Particle(eye, Vector3(dir.x * 40.f, dir.y * 30.f, dir.z * 40.f), 0.99f, Vector3(0, -9.8f, 0), 200.f, 5000);
+			Particle* bullet = new Particle(eye, dir*35.f, 0.99f, Vector3(0, -9.8f, 0), 200.f, 5000);
 			bullet->setColor(Vector4(0, 0, 1, 1));
 			proyectiles.push_back(bullet);
 			break;

@@ -26,11 +26,11 @@ Particle::~Particle()
 }
 
 void Particle::Update(double t)
-{
-	velocidad += acc * t *masa;
-	velocidad *= pow(damp, t);
+{	
 	posi += velocidad*t;
 	pose = physx::PxTransform(posi);
+	velocidad += acc * t;
+	velocidad *= pow(damp, t);
 	if (startTime != 0) {
 		decreaseTime();
 	}
