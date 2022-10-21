@@ -20,6 +20,7 @@ public:
 	double getTime() { return startTime; };
 	void decreaseTime() { startTime--; };
 	void setColor(Vector4 color) { renderItem->color = color; };
+	bool isAlive() { return alive; };
 
 private:
 
@@ -31,4 +32,5 @@ private:
 	RenderItem* renderItem;
 	double masa;
 	double startTime = 0;
+	bool alive = false;
 };

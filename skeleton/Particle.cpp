@@ -18,6 +18,8 @@ Particle::Particle(Vector3 pos, Vector3 vel, double damping, Vector3 aceleracion
 
 	startTime = time;
 
+	alive = true;
+
 }
 
 Particle::~Particle()
@@ -33,5 +35,8 @@ void Particle::Update(double t)
 	velocidad *= pow(damp, t);
 	if (startTime != 0) {
 		decreaseTime();
+	}
+	else {
+		alive = false;
 	}
 }
