@@ -1,17 +1,32 @@
-#include "core.hpp"
 #include "RenderUtils.hpp"
+#include "core.hpp"
+#include "Particle.h"
+#include "PxPhysicsAPI.h"
+#include "ParticleGenerator.h"
+#include <vector>
+#include <string>
 #include <list>
+#include <memory>
 
-class Particle;
-class ParticleGenerator;
-
-class PartycleSystem {
+class ParticleSystem
+{
 public:
-	std::list<Particle*> particles;
-	ParticleGenerator* generator;
+
+	ParticleSystem(Vector3 pos) { position = pos; }
+	~ParticleSystem();
 	void update(double t);
-	void generateParticle();
+
+	ParticleGenerator* getParticleGenerator(string name);
+	void fountainSystem();
+	void activateFountain() { uniformActive = !uniformActive; };
+	bool isFountainActive() { return uniformActive; };
 
 protected:
-	bool outOfBounds(Particle* particle);
+
+	std::list<Particle*> particles;
+	std::list<ParticleGenerator*> generators;
+	Vector3 position;
+
+	UniformParticleGenerator* uniformGenerator;
+	bool uniformActive = false;
 };

@@ -7,7 +7,8 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
-#include "Particle.h"
+#include "ParticleSystem.h"
+//#include "Particle.h"
 
 #include <iostream>
 
@@ -29,15 +30,17 @@ PxPvd* gPvd = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 
+ParticleSystem* particleSystem = NULL;
 
 Particle* gParticula = NULL;
 
 vector<Particle*> proyectiles;
 
-
-ContactReportCallback gContactReportCallback;
+vector<Particle*> particles;
 
 shotType currentShot = PISTOL;
+
+ContactReportCallback gContactReportCallback;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -63,6 +66,8 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 
 	gScene = gPhysics->createScene(sceneDesc);
+
+	particleSystem = new ParticleSystem({ 0,0,0 });
 }
 
 
@@ -76,12 +81,14 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
+	particleSystem->update(1.0);
+
 	for (int i = 0; i < proyectiles.size(); i++) {
-			proyectiles[i]->Update(t);
-			if (proyectiles[i]->getPosition().y < 0.0f || proyectiles[i]->getTime() <= 0 || proyectiles[i]->getPosition().z > 200.0f){
-				delete proyectiles[i];
-				proyectiles.erase(proyectiles.begin()+i);
-			}
+		proyectiles[i]->Update(t);
+		if (proyectiles[i]->getPos().y < 0.0f || proyectiles[i]->getTime() <= 0 || proyectiles[i]->getPos().z > 200.0f) {
+			delete proyectiles[i];
+			proyectiles.erase(proyectiles.begin() + i);
+		}
 	}
 }
 
@@ -101,6 +108,7 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
+	delete particleSystem;
 	}
 
 // Function called when a key is pressed
@@ -108,14 +116,14 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
-	switch(key)
+	switch (key)
 	{
-	//case 'B': break;
-	//case ' ':	break;
-		case ' ':
-		{
-			break;
-		}
+		//case 'B': break;
+		//case ' ':	break;
+	case ' ':
+	{
+		break;
+	}
 	case 'p':
 		if (currentShot == PISTOL) {
 			currentShot = FIREBALL;
@@ -148,13 +156,21 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 		case CANONBALL:
 		{
-			Particle* bullet = new Particle(eye, dir*35.f, 0.99f, Vector3(0, -9.8f, 0), 200.f, 5000);
+			Particle* bullet = new Particle(eye, dir * 35.f, 0.99f, Vector3(0, -9.8f, 0), 200.f, 5000);
 			bullet->setColor(Vector4(0, 0, 1, 1));
 			proyectiles.push_back(bullet);
 			break;
 		}
 		break;
 		}
+		break;
+	}
+	case 'g':
+	{
+		particleSystem->activateFountain();
+		if (particleSystem->isFountainActive())
+			particleSystem->fountainSystem();
+		break;
 	}
 	default:
 		break;

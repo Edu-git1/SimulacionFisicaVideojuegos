@@ -11,12 +11,15 @@ public:
 
 	void Update(double t);
 
-	void setPosition(physx::PxTransform pos) { pose = pos; };
+	void setPosition(Vector3 pos) { posi = pos; };
 	void setMass(double mass) { masa = mass; };
 	void setVelocity(Vector3 vel) { velocidad = vel; };
 	void setAcceleration(Vector3 ace) { acc = ace; };
 	void setDamping(double damping) { damp = damping; };
-	Vector3 getPosition() { return posi; };
+	Vector3 getPos() { return posi; };
+	Vector3 getVel() { return velocidad; };
+	double getMass() { return masa; };
+	double getDamp() { return damp; };
 	double getTime() { return startTime; };
 	void decreaseTime() { startTime--; };
 	void setColor(Vector4 color) { renderItem->color = color; };
