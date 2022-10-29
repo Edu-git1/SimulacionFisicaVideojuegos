@@ -18,6 +18,7 @@ public:
 	void setDamping(double damping) { damp = damping; };
 	Vector3 getPos() { return posi; };
 	Vector3 getVel() { return velocidad; };
+	Vector3 getAcc() { return acc; };
 	double getMass() { return masa; };
 	double getDamp() { return damp; };
 	double getTime() { return startTime; };

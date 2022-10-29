@@ -48,15 +48,15 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string name)
 void ParticleSystem::fountainSystem()
 {
 	Vector3 pose = { 0.0, 3.0, 0.0 };
-	Vector3 vel = { 2.0, 5.0, 2.0 };
-	Vector3 acc = { 0.0f, -0.08f, 0.0f };
-	double time = 100.0;
+	Vector3 vel = { 0, 30.0, 0 };
+	Vector3 acc = { 0.0f, -9.8f, 0.0f };
+	double time = 5.0;
 	double mass = 0.5;
 	double damp = 0.95;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
-	p->setColor(Vector4{ 0.0f, 0.0f, 0.f, 1 });
+	p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
 
-	uniformGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 5, 0, 0.01 }, 4000);
+	uniformGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 10, 0, 10 }, 5);
 
 	generators.push_back(uniformGenerator);
 }

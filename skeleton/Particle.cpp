@@ -31,9 +31,9 @@ Particle::~Particle()
 void Particle::Update(double t)
 {
 	startTime -= t;
-	pose = physx::PxTransform(posi.x, posi.y, posi.z);
-	pose = physx::PxTransform(pose.p.x + velocidad.x * t, pose.p.y + velocidad.y * t, pose.p.z + velocidad.z * t);
-	velocidad = Vector3(velocidad.x + acc.x * t, velocidad.y + acc.y * t, velocidad.z + acc.z * t);
+	posi += velocidad * t;
+	pose = physx::PxTransform(posi);
+	velocidad += acc * t;
 	velocidad *= pow(damp, t);
 	if (startTime < 0) {
 		alive = false;

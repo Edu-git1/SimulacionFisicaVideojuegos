@@ -52,9 +52,10 @@ list<Particle*> UniformParticleGenerator::generateParticle()
 			Vector3 pos = { px(rng), py(rng), pz(rng) };
 			Vector3 vel = { vx(rng), vy(rng), vz(rng) };
 
-			Particle* p = particle;
+			Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
 			p->setVelocity(vel);
 			p->setPosition(pos);
+			//p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
 			listParticles.push_back(p);
 		}
 	}
