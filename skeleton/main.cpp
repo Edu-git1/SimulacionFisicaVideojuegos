@@ -81,7 +81,7 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	particleSystem->update(1.0);
+	particleSystem->update(t);
 
 	for (int i = 0; i < proyectiles.size(); i++) {
 		proyectiles[i]->Update(t);

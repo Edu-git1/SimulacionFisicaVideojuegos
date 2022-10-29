@@ -11,8 +11,8 @@ ParticleSystem::~ParticleSystem()
 		delete f;
 		f = nullptr;
 	}
-	particles.clear();
-	generators.clear();
+	//particles.clear();
+	//generators.clear();
 }
 
 void ParticleSystem::update(double t)
@@ -27,10 +27,7 @@ void ParticleSystem::update(double t)
 	for (auto it = particles.begin(); it != particles.end();) {
 		(*it)->Update(t);
 		if (!(*it)->isAlive()) {
-			if ((*it) != nullptr) 
-			{
-				delete (*it);
-			}
+			delete (*it);
 			it = particles.erase(it);
 		}
 		else {
@@ -59,7 +56,7 @@ void ParticleSystem::fountainSystem()
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.0f, 0.0f, 0.f, 1 });
 
-	uniformGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 5, 0, 0.01 }, 400);
+	uniformGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 5, 0, 0.01 }, 4000);
 
 	generators.push_back(uniformGenerator);
 }

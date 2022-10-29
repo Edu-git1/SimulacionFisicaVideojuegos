@@ -47,7 +47,7 @@ list<Particle*> UniformParticleGenerator::generateParticle()
 	{
 		double cr = gen(rng);
 
-		if (cr <= probability*100)
+		if (cr <= probability)
 		{
 			Vector3 pos = { px(rng), py(rng), pz(rng) };
 			Vector3 vel = { vx(rng), vy(rng), vz(rng) };

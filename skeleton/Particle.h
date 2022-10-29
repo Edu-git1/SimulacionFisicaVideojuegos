@@ -35,5 +35,5 @@ private:
 	RenderItem* renderItem;
 	double masa;
 	double startTime = 0;
-	bool alive = false;
+	bool alive = true;
 };

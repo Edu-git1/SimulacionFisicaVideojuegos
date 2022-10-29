@@ -25,18 +25,17 @@ Particle::Particle(Vector3 pos, Vector3 vel, double damping, Vector3 aceleracion
 Particle::~Particle()
 {
 	DeregisterRenderItem(renderItem);
+	renderItem = nullptr;
 }
 
 void Particle::Update(double t)
-{	
-	posi += velocidad*t;
-	pose = physx::PxTransform(posi);
-	velocidad += acc * t;
+{
+	startTime -= t;
+	pose = physx::PxTransform(posi.x, posi.y, posi.z);
+	pose = physx::PxTransform(pose.p.x + velocidad.x * t, pose.p.y + velocidad.y * t, pose.p.z + velocidad.z * t);
+	velocidad = Vector3(velocidad.x + acc.x * t, velocidad.y + acc.y * t, velocidad.z + acc.z * t);
 	velocidad *= pow(damp, t);
-	if (startTime != 0) {
-		decreaseTime();
-	}
-	else {
+	if (startTime < 0) {
 		alive = false;
 	}
 }
