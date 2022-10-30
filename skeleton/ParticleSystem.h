@@ -21,6 +21,10 @@ public:
 	void activateFountain() { uniformActive = !uniformActive; };
 	bool isFountainActive() { return uniformActive; };
 
+	void fogSystem();
+	void activateFog() { gaussActive = !gaussActive; };
+	bool isFogActive() { return gaussActive; };
+
 protected:
 
 	std::list<Particle*> particles;
@@ -29,4 +33,7 @@ protected:
 
 	UniformParticleGenerator* uniformGenerator;
 	bool uniformActive = false;
+
+	GaussianParticleGenerator* gaussianGenerator;
+	bool gaussActive = false;
 };

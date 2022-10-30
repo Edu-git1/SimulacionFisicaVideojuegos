@@ -45,12 +45,27 @@ class UniformParticleGenerator : public ParticleGenerator
 public:
 
 	UniformParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num);
-	std::list<Particle*> generateParticle() override;
+	list<Particle*> generateParticle() override;
 protected:
 
 	bool uniformActive;
 	Vector3 uniformPos, uniformVel;
-	std::mt19937 rng;
+	mt19937 rng;
+
+};
+
+class GaussianParticleGenerator : public ParticleGenerator
+{
+public:
+
+	GaussianParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num);
+	list<Particle*> generateParticle() override;
+
+protected:
+
+	bool gaussActive;
+	Vector3 gaussPos, gaussVel;
+	mt19937 rng;
 
 };
 

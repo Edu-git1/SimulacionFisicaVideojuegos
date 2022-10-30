@@ -172,6 +172,13 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			particleSystem->fountainSystem();
 		break;
 	}
+	case 'f':
+	{
+		particleSystem->activateFog();
+		if (particleSystem->isFogActive())
+			particleSystem->fogSystem();
+		break;
+	}
 	default:
 		break;
 	}

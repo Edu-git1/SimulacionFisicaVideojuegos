@@ -55,7 +55,65 @@ list<Particle*> UniformParticleGenerator::generateParticle()
 			Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
 			p->setVelocity(vel);
 			p->setPosition(pos);
-			//p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
+			p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
+			listParticles.push_back(p);
+		}
+	}
+
+	return listParticles;
+}
+
+GaussianParticleGenerator::GaussianParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
+{
+	name = "niebla";
+	particle = part;
+
+	gaussActive = false;
+
+	pos = part->getPos();
+	vel = part->getVel();
+	acc = part->getAcc();
+
+	probability = probab;
+
+	gaussPos = pose * 2;
+	gaussVel = veloci * 0.5;
+
+	nParticles = num * 2;
+
+	std::random_device random;
+	rng = std::mt19937(random());
+}
+
+
+list<Particle*> GaussianParticleGenerator::generateParticle()
+{
+	std::list<Particle*> listParticles;
+
+	if (particle == nullptr)
+		return listParticles;
+
+	auto gen = uniform_int_distribution<int>(0, 100);
+	auto px = normal_distribution<float>(pos.x, gaussPos.x);
+	auto py = normal_distribution<float>(pos.y, gaussPos.y);
+	auto pz = normal_distribution<float>(pos.z, gaussPos.z);
+	auto vx = normal_distribution<float>(vel.x, gaussVel.x);
+	auto vy = normal_distribution<float>(vel.y, gaussVel.y);
+	auto vz = normal_distribution<float>(vel.z, gaussVel.z);
+
+	for (int i = 0; i < nParticles; i++)
+	{
+		int cr = gen(rng);
+
+		if (cr <= probability)
+		{
+			Vector3 pos = { px(rng), py(rng), pz(rng) };
+			Vector3 vel = { vx(rng), vy(rng), vz(rng) };
+
+			Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
+			p->setVelocity(vel);
+			p->setPosition(pos);
+			p->setColor(Vector4{ 0.49f, 0.49f, 0.49f, 1 });
 			listParticles.push_back(p);
 		}
 	}
