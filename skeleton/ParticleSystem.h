@@ -25,6 +25,11 @@ public:
 	void activateFog() { gaussActive = !gaussActive; };
 	bool isFogActive() { return gaussActive; };
 
+	void fireworkSystem();
+	void fireworkGeneratorSystem();
+	void activateFirework() { fireworkActive = !fireworkActive; };
+	bool isFireworkActive() { return fireworkActive; };
+
 protected:
 
 	std::list<Particle*> particles;
@@ -36,4 +41,8 @@ protected:
 
 	GaussianParticleGenerator* gaussianGenerator;
 	bool gaussActive = false;
+
+	FireworkGenerator* fireworkGenerator;
+	bool fireworkActive = false;
+	float countdown = 0;
 };

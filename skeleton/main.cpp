@@ -179,6 +179,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			particleSystem->fogSystem();
 		break;
 	}
+	case 'j':
+	{
+		particleSystem->fireworkSystem();
+		break;
+	}
 	default:
 		break;
 	}

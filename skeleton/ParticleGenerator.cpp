@@ -21,6 +21,7 @@ UniformParticleGenerator::UniformParticleGenerator(Particle* part, double probab
 	uniformVel = veloci / 3;
 	pos = particle->getPos();
 	vel = particle->getVel();
+	acc = particle->getAcc();
 
 	probability = probab;
 	random_device random;
@@ -67,28 +68,25 @@ GaussianParticleGenerator::GaussianParticleGenerator(Particle* part, double prob
 {
 	name = "niebla";
 	particle = part;
+	nParticles = num * 2;
 
-	gaussActive = false;
 
+	gaussPos = pose * 2;
+	gaussVel = veloci * 0.5;
 	pos = part->getPos();
 	vel = part->getVel();
 	acc = part->getAcc();
 
 	probability = probab;
-
-	gaussPos = pose * 2;
-	gaussVel = veloci * 0.5;
-
-	nParticles = num * 2;
-
-	std::random_device random;
-	rng = std::mt19937(random());
+	random_device random;
+	rng = mt19937(random());
+	gaussActive = false;
 }
 
 
 list<Particle*> GaussianParticleGenerator::generateParticle()
 {
-	std::list<Particle*> listParticles;
+	list<Particle*> listParticles;
 
 	if (particle == nullptr)
 		return listParticles;
@@ -117,6 +115,55 @@ list<Particle*> GaussianParticleGenerator::generateParticle()
 			listParticles.push_back(p);
 		}
 	}
+
+	return listParticles;
+}
+
+FireworkGenerator::FireworkGenerator(Particle* part, Vector3 pose, float radio, int num)
+{
+	name = "firework";
+	particle = part;
+	nParticles = num;
+
+	radius = radio;
+	pos = pose;
+	vel = part->getVel();
+	acc = part->getAcc();
+
+	fireworkActive = false;
+
+	random = uniform_real_distribution<float>(0, 1);
+}
+
+list<Particle*> FireworkGenerator::generateParticle()
+{
+	list<Particle*> listParticles;
+
+	if (particle == nullptr)
+		return listParticles;
+
+	random_device rng{};
+	mt19937 gen{ rng() };
+
+	float teta = 0, pi = 0;
+
+	for (int i = 0; i < nParticles; i++)
+	{
+		pi = 2 * 3.14 * random(gen);
+		teta = 2 * 3.14 * random(gen);
+		float x = cos(teta) * sin(pi);
+		float y = sin(teta) * sin(pi);
+		float z = cos(pi);
+
+		Vector3 vel(x, y, z);
+
+		Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
+		p->setPosition(pos);
+		p->setVelocity(vel.getNormalized() * 20);
+
+		listParticles.push_back(p);
+	}
+
 
 	return listParticles;
 }

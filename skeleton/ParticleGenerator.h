@@ -32,7 +32,7 @@ protected:
 	physx::PxTransform origin{ 0,0,0 };
 	Particle* particle;
 	bool alive = false;
-	std::string name;
+	string name;
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 acc;
@@ -66,6 +66,22 @@ protected:
 	bool gaussActive;
 	Vector3 gaussPos, gaussVel;
 	mt19937 rng;
+
+};
+
+class FireworkGenerator : public ParticleGenerator
+{
+public:
+
+	FireworkGenerator(Particle* part, Vector3 pose, float radio, int num);
+	list<Particle*> generateParticle() override;
+
+protected:
+
+	bool fireworkActive;
+	float radius;
+	Vector3 fireworkPos, fireworkVel, fireworkAcc;
+	uniform_real_distribution<float> random;
 
 };
 

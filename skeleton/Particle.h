@@ -1,5 +1,9 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
+#include <list>
+#include <memory>
+#include "ParticleGenerator.h"
+using namespace std;
 
 enum shotType { PISTOL, FIREBALL, CANONBALL };
 
@@ -38,3 +42,26 @@ private:
 	double startTime = 0;
 	bool alive = true;
 };
+
+class Firework : public Particle
+{
+public:
+
+	Firework(Particle* part, list<shared_ptr<ParticleGenerator>> gens) : Particle(part->getPos(), part->getVel(), part->getDamp(), part->getAcc(), part->getMass(), part->getTime()), generators(gens) {}
+	virtual ~Firework() {};
+
+	list<Particle*> explosiones()
+	{
+		list<Particle*> lista;
+		for (auto g : generators)
+		{
+			for (auto p : g->generateParticle())
+				lista.push_back(p);
+		}
+		return lista;
+	}
+
+protected:
+	list<shared_ptr<ParticleGenerator>> generators;
+};
+
