@@ -103,7 +103,7 @@ void ParticleSystem::fogSystem()
 void ParticleSystem::fireworkSystem()
 {
 	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 10, 0 };
+	Vector3 vel = { 0, 20, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
 	double time = 2.0;
 	double mass = 1;
