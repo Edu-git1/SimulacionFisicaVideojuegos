@@ -30,22 +30,30 @@ void ParticleSystem::update(double t)
 	}
 	if (fireworkActive)
 	{
-		if (t > countdown)
-		{
-			for (auto p : fireworkGenerator->generateParticle())
-				particles.push_back(p);
-
-			countdown += rand() % 600;
-		}
 	}
 
 	for (auto it = particles.begin(); it != particles.end();) {
-		(*it)->Update(t);
+		(*it)->Update(t);		
 		if (!(*it)->isAlive()) {
+			Firework* firework = dynamic_cast<Firework*>(*it);
+			if (firework != nullptr)
+			{
+				for (auto i : firework->explosiones())
+					particles.push_back(i);
+
+			}
 			delete (*it);
 			it = particles.erase(it);
 		}
 		else {
+			Firework* firework = dynamic_cast<Firework*>(*it);
+			if (firework != nullptr)
+			{
+				shared_ptr<FireworkGenerator> generator;
+				Particle* particle = new Particle(firework->getPos(), particleBase->getVel(), particleBase->getDamp(), particleBase->getAcc(), particleBase->getMass(), particleBase->getTime());
+				generator.reset(new FireworkGenerator(particle, particle->getPos(), 200));
+				firework->updateGenerator(generator);
+			}
 			it++;
 		}
 	}
@@ -95,32 +103,18 @@ void ParticleSystem::fogSystem()
 void ParticleSystem::fireworkSystem()
 {
 	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 0, 0 };
+	Vector3 vel = { 0, 10, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 10.0;
+	double time = 2.0;
 	double mass = 1;
 	double damp = 0.85;
 	Particle* particle = new Particle(pose, vel, damp, acc, mass, time);
+	particleBase = new Particle(pose, vel, damp, acc, mass, time);
 
-	int n = rand() % 3;
 	shared_ptr<FireworkGenerator> generator;
-	generator.reset(new FireworkGenerator(particle, { 5, 5, 0 }, 40, 200));
+	generator.reset(new FireworkGenerator(particle, particle->getPos(), 200));
 
-	Particle* particle2 = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
-	Firework* fire = new Firework(particle2, { generator });
+	Particle* particle2 = new Particle(pose, vel, damp, acc, mass, time);
+	Firework* fire = new Firework(particle2, generator);
 	particles.push_back(fire);
-}
-
-void ParticleSystem::fireworkGeneratorSystem()
-{
-	countdown = rand() % 600;
-	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 0, 0 };
-	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 10.0;
-	double mass = 1;
-	double damp = 0.85;
-	Particle* particle = new Particle(pose, vel, damp, acc, mass, time);
-	fireworkGenerator = new FireworkGenerator(particle, { 5, 5, 0 }, 40, 200);
-	generators.push_back(fireworkGenerator);
 }

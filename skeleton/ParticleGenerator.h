@@ -73,14 +73,13 @@ class FireworkGenerator : public ParticleGenerator
 {
 public:
 
-	FireworkGenerator(Particle* part, Vector3 pose, float radio, int num);
+	FireworkGenerator(Particle* part, Vector3 pose, int num);
 	list<Particle*> generateParticle() override;
 
 protected:
 
 	bool fireworkActive;
-	float radius;
-	Vector3 fireworkPos, fireworkVel, fireworkAcc;
+	Vector3 fireworkPos;
 	uniform_real_distribution<float> random;
 
 };

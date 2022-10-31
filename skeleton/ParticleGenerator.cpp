@@ -119,16 +119,12 @@ list<Particle*> GaussianParticleGenerator::generateParticle()
 	return listParticles;
 }
 
-FireworkGenerator::FireworkGenerator(Particle* part, Vector3 pose, float radio, int num)
+FireworkGenerator::FireworkGenerator(Particle* part, Vector3 pose, int num)
 {
 	name = "firework";
 	particle = part;
 	nParticles = num;
-
-	radius = radio;
-	pos = pose;
-	vel = part->getVel();
-	acc = part->getAcc();
+	fireworkPos = pose;
 
 	fireworkActive = false;
 
@@ -158,7 +154,7 @@ list<Particle*> FireworkGenerator::generateParticle()
 		Vector3 vel(x, y, z);
 
 		Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
-		p->setPosition(pos);
+		p->setPosition(fireworkPos);
 		p->setVelocity(vel.getNormalized() * 20);
 
 		listParticles.push_back(p);

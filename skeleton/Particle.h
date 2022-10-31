@@ -11,7 +11,7 @@ class Particle {
 public:
 	Particle(Vector3 pos, Vector3 vel, double damp, Vector3 aceleracion, double mass, double time);
 
-	~Particle();
+	virtual ~Particle();
 
 	void Update(double t);
 
@@ -47,21 +47,19 @@ class Firework : public Particle
 {
 public:
 
-	Firework(Particle* part, list<shared_ptr<ParticleGenerator>> gens) : Particle(part->getPos(), part->getVel(), part->getDamp(), part->getAcc(), part->getMass(), part->getTime()), generators(gens) {}
+	Firework(Particle* part, shared_ptr<ParticleGenerator> gen) : Particle(part->getPos(), part->getVel(), part->getDamp(), part->getAcc(), part->getMass(), part->getTime()), generator(gen) {}
 	virtual ~Firework() {};
 
 	list<Particle*> explosiones()
 	{
 		list<Particle*> lista;
-		for (auto g : generators)
-		{
-			for (auto p : g->generateParticle())
+		for (auto p : generator->generateParticle())
 				lista.push_back(p);
-		}
 		return lista;
 	}
+	void updateGenerator(shared_ptr<ParticleGenerator> gen) { generator = gen; };
 
 protected:
-	list<shared_ptr<ParticleGenerator>> generators;
+	shared_ptr<ParticleGenerator> generator;
 };
 

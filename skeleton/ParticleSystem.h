@@ -45,4 +45,5 @@ protected:
 	FireworkGenerator* fireworkGenerator;
 	bool fireworkActive = false;
 	float countdown = 0;
+	Particle* particleBase;
 };
