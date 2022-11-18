@@ -67,6 +67,13 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	particleSystem = new ParticleSystem({ 0,0,0 });
+
+	particleSystem->gravitySystem();
+	particleSystem->dragSystem();
+	particleSystem->windSystem();
+	particleSystem->whirlwindSystem();
+	particleSystem->fogSystem();
+	particleSystem->fountainSystem();
 }
 
 
@@ -167,15 +174,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'g':
 	{
 		particleSystem->activateFountain();
-		if (particleSystem->isFountainActive())
-			particleSystem->fountainSystem();
 		break;
 	}
 	case 'f':
 	{
 		particleSystem->activateFog();
-		if (particleSystem->isFogActive())
-			particleSystem->fogSystem();
 		break;
 	}
 	case 'm':
@@ -183,8 +186,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	case 'o':
 		particleSystem->activateGravity();
-		if(particleSystem->isGravityActive())
-			particleSystem->gravitySystem();
+		break;
+	case 'v':
+		particleSystem->activateWind();
+		break;
+	case 'h':
+		particleSystem->activateWhirlwind();
 		break;
 	default:
 		break;

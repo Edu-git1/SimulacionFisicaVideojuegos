@@ -9,7 +9,10 @@ class ForceGenerator
 public:
 	virtual void updateForce(Particle* part, double duracion) = 0;
 	string name;
+	virtual bool isActive() { return active; };
+	virtual void setActive() { active = !active; };
 protected:
+	bool active = false;
 	double time = -1;
 };
 

@@ -27,11 +27,14 @@ public:
 	default_random_engine generation;
 	uniform_real_distribution<> unimDist{ -1,1 };
 	normal_distribution<> normalDist{ 0.5, 0.5 };
+	virtual bool isActive() { return active; };
+	virtual void setActive(){ active = !active; };
 
 protected:
 	physx::PxTransform origin{ 0,0,0 };
 	Particle* particle;
 	bool alive = false;
+	bool active = false;
 	string name;
 	Vector3 pos;
 	Vector3 vel;

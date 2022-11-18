@@ -23,9 +23,8 @@ public:
 			if (it->second == part) {
 				it = erase(it);
 			}
-			else {
-				++it;
-			}
+			else
+				it++;
 		}
 	}
 };

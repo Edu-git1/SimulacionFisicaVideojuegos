@@ -22,21 +22,33 @@ public:
 
 	ParticleGenerator* getParticleGenerator(string name);
 	void fountainSystem();
-	void activateFountain() { uniformActive = !uniformActive;  if (!uniformActive) { eraseGenerator("uniform"); }; };
-	bool isFountainActive() { return uniformActive; };
+	void activateFountain() { fountainGenerator->setActive(); };
+	bool isFountainActive() { return fountainGenerator->isActive(); };
 
 	void fogSystem();
-	void activateFog() { gaussActive = !gaussActive; if (!gaussActive) { eraseGenerator("gaussian"); }; };
-	bool isFogActive() { return gaussActive; };
+	void activateFog() { fogGenerator->setActive(); };
+	bool isFogActive() { return fogGenerator->isActive(); };
 
 	void fireworkSystem();
 	void fireworkGeneratorSystem();
-	void activateFirework() { fireworkActive = !fireworkActive; };
-	bool isFireworkActive() { return fireworkActive; };
+	void activateFirework() { fireworkGenerator->setActive(); };
+	bool isFireworkActive() { return fireworkGenerator->isActive(); };
 
 	void gravitySystem();
-	void activateGravity() { gravityActive = !gravityActive; if (!gravityActive) { eraseForce("gravity"); }; };
-	bool isGravityActive() { return gravityActive; };
+	void activateGravity() { gravityGenerator->setActive(); };
+	bool isGravityActive() { return gravityGenerator->isActive(); };
+
+	void dragSystem();
+	void activateDrag() { dragGenerator->setActive(); };
+	bool isDragActive() { return dragGenerator->isActive(); };
+
+	void windSystem();
+	void activateWind() { windGenerator->setActive(); };
+	bool isWindActive() { return windGenerator->isActive(); };
+
+	void whirlwindSystem();
+	void activateWhirlwind() { whirlwindGenerator->setActive(); };
+	bool isWhirlwindActive() { return whirlwindGenerator->isActive(); };
 
 	void eraseGenerator(string nombre);
 	void eraseForce(string nombre);
@@ -47,20 +59,19 @@ protected:
 	std::list<ParticleGenerator*> generators;
 	Vector3 position;
 
-	UniformParticleGenerator* uniformGenerator;
-	bool uniformActive = false;
+	UniformParticleGenerator* fountainGenerator;
 
-	GaussianParticleGenerator* gaussianGenerator;
-	bool gaussActive = false;
+	GaussianParticleGenerator* fogGenerator;
 
 	FireworkGenerator* fireworkGenerator;
-	bool fireworkActive = false;
 	float countdown = 0;
 	Particle* particleBase;
 
 	ForceRegistry forces;
-	bool gravityActive = false;
 
 	std::list<ForceGenerator*> forceGenerators;
 	GravityGenerator* gravityGenerator;
+	WindGenerator* windGenerator;
+	DragGenerator* dragGenerator;
+	WhirlwindGenerator* whirlwindGenerator;
 };

@@ -30,14 +30,13 @@ Particle::~Particle()
 
 void Particle::Update(double t)
 {
-	if (1.f/masa <= 0.f) return;
+	if (1.f/masa <= 1e-10f) return;
 	startTime -= t;
 	posi += velocidad * t;
 	pose = physx::PxTransform(posi);
-	auto acceleracion = fuerza * (1.f/masa);
-	acceleracion += acc;
+	acc = fuerza * (1.f/masa);
 	//cout << acc.y << endl;
-	velocidad += acceleracion * t;
+	velocidad += acc * t;
 	velocidad *= pow(damp, t);
 	if (startTime < 0) {
 		alive = false;

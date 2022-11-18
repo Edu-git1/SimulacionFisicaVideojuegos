@@ -106,7 +106,7 @@ list<Particle*> GaussianParticleGenerator::generateParticle()
 		if (cr <= probability)
 		{
 			Vector3 pos = { px(rng), py(rng), pz(rng) };
-			Vector3 vel = { vx(rng), vy(rng), vz(rng) };
+			/*Vector3 vel = { vx(rng), vy(rng), vz(rng) };*/
 
 			Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
 			p->setVelocity(vel);

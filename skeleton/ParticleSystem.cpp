@@ -17,13 +17,21 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::update(double t)
 {
-
-	for (auto g : generators) {
-		for (auto p : g->generateParticle()) {
-			particles.push_back(p);
-			for (auto f : forceGenerators) {
-				forces.addRegistry(f, p);
+	if (particles.size() < 100) {
+		for (auto g : generators) {
+			if (g->isActive()) {
+				for (auto p : g->generateParticle()) {
+					particles.push_back(p);
+				}
 			}
+		}
+	}
+	for (auto f : forceGenerators) {
+		for (auto it = particles.begin(); it != particles.end();) {
+			if (f->isActive()) {
+				forces.addRegistry(f, (*it));
+			}
+			it++;
 		}
 	}
 
@@ -39,7 +47,7 @@ void ParticleSystem::update(double t)
 					particles.push_back(i);
 
 			}
-			forces.eraseRegistry(*it);
+			forces.eraseRegistry((*it));
 			delete (*it);
 			it = particles.erase(it);
 		}
@@ -69,17 +77,17 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string name)
 void ParticleSystem::fountainSystem()
 {
 	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 30.0, 0 };
-	Vector3 acc = { 0.0f, -9.8f, 0.0f };
+	Vector3 vel = { 0, 30.0, 30.0 };
+	Vector3 acc = { 0.0f, 0.f, 0.0f };
 	double time = 5.0;
 	double mass = 0.5;
 	double damp = 0.95;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
 
-	uniformGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 10, 0, 10 }, 5);
+	fountainGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 10, 0, 10 }, 5);
 
-	generators.push_back(uniformGenerator);
+	generators.push_back(fountainGenerator);
 }
 
 void ParticleSystem::fogSystem()
@@ -87,15 +95,15 @@ void ParticleSystem::fogSystem()
 	Vector3 pose = { 0.0, 10.0, 0.0 };
 	Vector3 vel = { 0, 0, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 10.0;
+	double time = 1.0;
 	double mass = 1;
 	double damp = 0.85;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.49f, 0.49f, 0.49f, 1 });
 
-	gaussianGenerator = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 1);
+	fogGenerator = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 10);
 
-	generators.push_back(gaussianGenerator);
+	generators.push_back(fogGenerator);
 }
 
 void ParticleSystem::fireworkSystem()
@@ -120,10 +128,23 @@ void ParticleSystem::fireworkSystem()
 void ParticleSystem::gravitySystem() {
 	gravityGenerator = new GravityGenerator(Vector3(0, -9.8, 0), 100);
 	forceGenerators.push_back(gravityGenerator);
-	for (auto it = particles.begin(); it != particles.end();) {
-		forces.addRegistry(gravityGenerator, (*it));
-		it++;
-	}
+}
+
+void ParticleSystem::dragSystem()
+{
+
+}
+
+void ParticleSystem::windSystem()
+{
+	windGenerator = new WindGenerator(Vector3(5, 0, 0), 1, 0.1);
+	forceGenerators.push_back(windGenerator);
+}
+
+void ParticleSystem::whirlwindSystem()
+{
+	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 0.75);
+	forceGenerators.push_back(whirlwindGenerator);
 }
 
 void ParticleSystem::eraseGenerator(string nombre) {
