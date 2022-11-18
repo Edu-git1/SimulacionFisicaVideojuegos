@@ -28,9 +28,8 @@ void ParticleSystem::update(double t)
 		for (auto p : gaussianGenerator->generateParticle())
 			particles.push_back(p);
 	}
-	if (fireworkActive)
-	{
-	}
+
+	forces.updateForces(t);
 
 	for (auto it = particles.begin(); it != particles.end();) {
 		(*it)->Update(t);		
@@ -42,6 +41,7 @@ void ParticleSystem::update(double t)
 					particles.push_back(i);
 
 			}
+			forces.eraseRegistry(*it);
 			delete (*it);
 			it = particles.erase(it);
 		}
@@ -117,4 +117,11 @@ void ParticleSystem::fireworkSystem()
 	Particle* particle2 = new Particle(pose, vel, damp, acc, mass, time);
 	Firework* fire = new Firework(particle2, generator);
 	particles.push_back(fire);
+}
+
+void ParticleSystem::gravitySystem() {
+	Particle* part = new Particle({ 10, 10, 10 }, { 0, 0, 0 }, 0.99, { 0, 0, 0 }, 1, 5);
+	GravityGenerator* generator = new GravityGenerator(Vector3(0, -9.8, 0), 100);
+	forces.addRegistry(generator, part);
+	particles.push_back(part);
 }

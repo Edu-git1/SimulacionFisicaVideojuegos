@@ -1,12 +1,16 @@
 #include "RenderUtils.hpp"
 #include "core.hpp"
-#include "Particle.h"
 #include "PxPhysicsAPI.h"
 #include "ParticleGenerator.h"
+#include "ForceGenerator.h"
+#include "ForceRegistry.h"
 #include <vector>
 #include <string>
 #include <list>
 #include <memory>
+
+using namespace std;
+
 
 class ParticleSystem
 {
@@ -29,6 +33,7 @@ public:
 	void fireworkGeneratorSystem();
 	void activateFirework() { fireworkActive = !fireworkActive; };
 	bool isFireworkActive() { return fireworkActive; };
+	void gravitySystem();
 
 protected:
 
@@ -46,4 +51,6 @@ protected:
 	bool fireworkActive = false;
 	float countdown = 0;
 	Particle* particleBase;
+
+	ForceRegistry forces;
 };

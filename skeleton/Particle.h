@@ -3,20 +3,21 @@
 #include <list>
 #include <memory>
 #include "ParticleGenerator.h"
+#include <iostream>
 using namespace std;
 
 enum shotType { PISTOL, FIREBALL, CANONBALL };
 
 class Particle {
 public:
-	Particle(Vector3 pos, Vector3 vel, double damp, Vector3 aceleracion, double mass, double time);
+	Particle(Vector3 pos, Vector3 vel, double damp, Vector3 aceleracion, float mass, double time);
 
 	virtual ~Particle();
 
 	void Update(double t);
 
 	void setPosition(Vector3 pos) { posi = pos; };
-	void setMass(double mass) { masa = mass; };
+	void setMass(float mass) { masa = mass; };
 	void setVelocity(Vector3 vel) { velocidad = vel; };
 	void setAcceleration(Vector3 ace) { acc = ace; };
 	void setDamping(double damping) { damp = damping; };
@@ -29,6 +30,8 @@ public:
 	void decreaseTime() { startTime--; };
 	void setColor(Vector4 color) { renderItem->color = color; };
 	bool isAlive() { return alive; };
+	void addForce(Vector3 force) { fuerza += force; };
+	void eraseForce() { fuerza = Vector3{ 0, 0, 0 }; }
 
 private:
 
@@ -36,9 +39,10 @@ private:
 	Vector3 velocidad;
 	Vector3 acc;
 	Vector3 posi;
+	Vector3 fuerza = {0, 0, 0};
 	physx::PxTransform pose;
 	RenderItem* renderItem;
-	double masa;
+	float masa;
 	double startTime = 0;
 	bool alive = true;
 };

@@ -13,7 +13,6 @@
 #include <iostream>
 
 
-
 using namespace physx;
 using namespace std;
 
@@ -68,6 +67,7 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	particleSystem = new ParticleSystem({ 0,0,0 });
+	particleSystem->gravitySystem();
 }
 
 
