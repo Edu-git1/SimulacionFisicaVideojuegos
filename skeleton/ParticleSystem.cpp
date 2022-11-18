@@ -18,15 +18,13 @@ ParticleSystem::~ParticleSystem()
 void ParticleSystem::update(double t)
 {
 
-	if (uniformActive)
-	{
-		for (auto p : uniformGenerator->generateParticle())
+	for (auto g : generators) {
+		for (auto p : g->generateParticle()) {
 			particles.push_back(p);
-	}
-	if (gaussActive)
-	{
-		for (auto p : gaussianGenerator->generateParticle())
-			particles.push_back(p);
+			for (auto f : forceGenerators) {
+				forces.addRegistry(f, p);
+			}
+		}
 	}
 
 	forces.updateForces(t);
@@ -95,7 +93,7 @@ void ParticleSystem::fogSystem()
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.49f, 0.49f, 0.49f, 1 });
 
-	gaussianGenerator = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 1000);
+	gaussianGenerator = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 1);
 
 	generators.push_back(gaussianGenerator);
 }
@@ -120,8 +118,34 @@ void ParticleSystem::fireworkSystem()
 }
 
 void ParticleSystem::gravitySystem() {
-	Particle* part = new Particle({ 10, 10, 10 }, { 0, 0, 0 }, 0.99, { 0, 0, 0 }, 1, 5);
-	GravityGenerator* generator = new GravityGenerator(Vector3(0, -9.8, 0), 100);
-	forces.addRegistry(generator, part);
-	particles.push_back(part);
+	gravityGenerator = new GravityGenerator(Vector3(0, -9.8, 0), 100);
+	forceGenerators.push_back(gravityGenerator);
+	for (auto it = particles.begin(); it != particles.end();) {
+		forces.addRegistry(gravityGenerator, (*it));
+		it++;
+	}
+}
+
+void ParticleSystem::eraseGenerator(string nombre) {
+	for (auto it = generators.begin(); it != generators.end();)
+	{
+		if ((*it)->getName() == nombre) {
+			generators.erase(it);
+			it = generators.end();
+		}
+		else
+			it++;
+	}
+}
+
+void ParticleSystem::eraseForce(string nombre) {
+	for (auto it = forceGenerators.begin(); it != forceGenerators.end();)
+	{
+		if ((*it)->name == nombre) {
+			forceGenerators.erase(it);
+			it = forceGenerators.end();
+		}		
+		else
+			it++;
+	}
 }

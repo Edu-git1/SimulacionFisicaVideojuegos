@@ -67,7 +67,6 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	particleSystem = new ParticleSystem({ 0,0,0 });
-	particleSystem->gravitySystem();
 }
 
 
@@ -181,6 +180,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	}
 	case 'm':
 		particleSystem->fireworkSystem();
+		break;
+	case 'o':
+		particleSystem->activateGravity();
+		if(particleSystem->isGravityActive())
+			particleSystem->gravitySystem();
+		break;
 	default:
 		break;
 	}

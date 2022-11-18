@@ -13,7 +13,7 @@ ParticleGenerator::~ParticleGenerator()
 
 UniformParticleGenerator::UniformParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
 {
-	name = "fuente";
+	name = "uniform";
 	particle = part;
 	nParticles = num;
 
@@ -66,7 +66,7 @@ list<Particle*> UniformParticleGenerator::generateParticle()
 
 GaussianParticleGenerator::GaussianParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
 {
-	name = "niebla";
+	name = "gaussian";
 	particle = part;
 	nParticles = num * 2;
 

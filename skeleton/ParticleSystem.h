@@ -22,18 +22,24 @@ public:
 
 	ParticleGenerator* getParticleGenerator(string name);
 	void fountainSystem();
-	void activateFountain() { uniformActive = !uniformActive; };
+	void activateFountain() { uniformActive = !uniformActive;  if (!uniformActive) { eraseGenerator("uniform"); }; };
 	bool isFountainActive() { return uniformActive; };
 
 	void fogSystem();
-	void activateFog() { gaussActive = !gaussActive; };
+	void activateFog() { gaussActive = !gaussActive; if (!gaussActive) { eraseGenerator("gaussian"); }; };
 	bool isFogActive() { return gaussActive; };
 
 	void fireworkSystem();
 	void fireworkGeneratorSystem();
 	void activateFirework() { fireworkActive = !fireworkActive; };
 	bool isFireworkActive() { return fireworkActive; };
+
 	void gravitySystem();
+	void activateGravity() { gravityActive = !gravityActive; if (!gravityActive) { eraseForce("gravity"); }; };
+	bool isGravityActive() { return gravityActive; };
+
+	void eraseGenerator(string nombre);
+	void eraseForce(string nombre);
 
 protected:
 
@@ -53,4 +59,8 @@ protected:
 	Particle* particleBase;
 
 	ForceRegistry forces;
+	bool gravityActive = false;
+
+	std::list<ForceGenerator*> forceGenerators;
+	GravityGenerator* gravityGenerator;
 };
