@@ -55,3 +55,16 @@ protected:
 	float _Kt;
 };
 
+class ExplosionGenerator : public ForceGenerator {
+public:
+	ExplosionGenerator(Vector3 centro, float radius, float k, double kt) : center(centro), radio(radius), _k(k), _kt(kt), tiempo(0.0) {};
+	~ExplosionGenerator() {};
+	void updateForce(Particle* part, double duracion) override;
+protected:
+	Vector3 center;
+	float radio;
+	float _k;
+	double _kt;
+	double tiempo;
+};
+

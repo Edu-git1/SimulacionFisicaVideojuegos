@@ -193,6 +193,9 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'h':
 		particleSystem->activateWhirlwind();
 		break;
+	case 'b':
+		particleSystem->explosionSystem();
+		break;
 	default:
 		break;
 	}

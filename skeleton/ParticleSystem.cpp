@@ -77,10 +77,10 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string name)
 void ParticleSystem::fountainSystem()
 {
 	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 30.0, 30.0 };
+	Vector3 vel = { 0, 10.0, 10.0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
 	double time = 5.0;
-	double mass = 0.5;
+	double mass = 10;
 	double damp = 0.95;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
@@ -95,13 +95,13 @@ void ParticleSystem::fogSystem()
 	Vector3 pose = { 0.0, 10.0, 0.0 };
 	Vector3 vel = { 0, 0, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 1.0;
-	double mass = 1;
+	double time = 5.0;
+	double mass = 10;
 	double damp = 0.85;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.49f, 0.49f, 0.49f, 1 });
 
-	fogGenerator = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 10);
+	fogGenerator = new GaussianParticleGenerator("niebla", p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 10);
 
 	generators.push_back(fogGenerator);
 }
@@ -137,14 +137,22 @@ void ParticleSystem::dragSystem()
 
 void ParticleSystem::windSystem()
 {
-	windGenerator = new WindGenerator(Vector3(5, 0, 0), 1, 0.1);
+	windGenerator = new WindGenerator(Vector3(5, 0, 0), 1, 0);
 	forceGenerators.push_back(windGenerator);
 }
 
 void ParticleSystem::whirlwindSystem()
 {
-	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 0.75);
+	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 1);
 	forceGenerators.push_back(whirlwindGenerator);
+}
+
+void ParticleSystem::explosionSystem() {
+	ExplosionGenerator* exp = new ExplosionGenerator({ 0,0,0 }, 20, 100, .15);
+	for (auto it = particles.begin(); it != particles.end();) {
+		forces.addRegistry(exp, (*it));
+		it++;
+	}
 }
 
 void ParticleSystem::eraseGenerator(string nombre) {

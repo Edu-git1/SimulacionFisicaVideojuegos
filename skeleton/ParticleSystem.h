@@ -50,6 +50,8 @@ public:
 	void activateWhirlwind() { whirlwindGenerator->setActive(); };
 	bool isWhirlwindActive() { return whirlwindGenerator->isActive(); };
 
+	void explosionSystem();
+
 	void eraseGenerator(string nombre);
 	void eraseForce(string nombre);
 

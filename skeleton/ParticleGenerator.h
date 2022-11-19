@@ -61,7 +61,7 @@ class GaussianParticleGenerator : public ParticleGenerator
 {
 public:
 
-	GaussianParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num);
+	GaussianParticleGenerator(string nombre, Particle* part, double probab, Vector3 pose, Vector3 veloci, int num);
 	list<Particle*> generateParticle() override;
 
 protected:

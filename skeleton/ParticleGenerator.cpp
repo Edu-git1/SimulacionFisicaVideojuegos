@@ -64,9 +64,9 @@ list<Particle*> UniformParticleGenerator::generateParticle()
 	return listParticles;
 }
 
-GaussianParticleGenerator::GaussianParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
+GaussianParticleGenerator::GaussianParticleGenerator(string nombre, Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
 {
-	name = "gaussian";
+	name = nombre;
 	particle = part;
 	nParticles = num * 2;
 
