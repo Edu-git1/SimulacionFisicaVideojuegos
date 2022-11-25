@@ -30,7 +30,6 @@ public:
 	bool isFogActive() { return fogGenerator->isActive(); };
 
 	void fireworkSystem();
-	void fireworkGeneratorSystem();
 	void activateFirework() { fireworkGenerator->setActive(); };
 	bool isFireworkActive() { return fireworkGenerator->isActive(); };
 
@@ -52,6 +51,11 @@ public:
 
 	void explosionSystem();
 
+	void springSystem();
+	void AnchoredSystem();
+
+	ParticleGenerator* getGenerator(string nombre);
+	ForceGenerator* getForce(string nombre);
 	void eraseGenerator(string nombre);
 	void eraseForce(string nombre);
 

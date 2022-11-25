@@ -10,7 +10,7 @@ class ForceRegistry : public multimap<ForceGenerator*, Particle*>
 public:
 	void updateForces(float duracion) {
 		for (auto it = begin(); it != end(); ++it) {
-			it->first->updateForce(it->second, duracion);
+			it->first->updateForce(it->second);
 		}
 	}
 

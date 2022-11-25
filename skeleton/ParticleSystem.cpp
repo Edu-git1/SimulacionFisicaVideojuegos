@@ -57,7 +57,7 @@ void ParticleSystem::update(double t)
 			{
 				shared_ptr<FireworkGenerator> generator;
 				Particle* particle = new Particle(firework->getPos(), particleBase->getVel(), particleBase->getDamp(), particleBase->getAcc(), particleBase->getMass(), particleBase->getTime());
-				generator.reset(new FireworkGenerator(particle, particle->getPos(), 200));
+				generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 200));
 				firework->updateGenerator(generator);
 			}
 			it++;
@@ -85,7 +85,7 @@ void ParticleSystem::fountainSystem()
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
 
-	fountainGenerator = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 10, 0, 10 }, 5);
+	fountainGenerator = new UniformParticleGenerator("fountain", p, 0.9, { 5, 0, 5 }, { 10, 0, 10 }, 5);
 
 	generators.push_back(fountainGenerator);
 }
@@ -118,7 +118,7 @@ void ParticleSystem::fireworkSystem()
 	particleBase = new Particle(pose, vel, damp, acc, mass, time);
 
 	shared_ptr<FireworkGenerator> generator;
-	generator.reset(new FireworkGenerator(particle, particle->getPos(), 200));
+	generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 200));
 
 	Particle* particle2 = new Particle(pose, vel, damp, acc, mass, time);
 	Firework* fire = new Firework(particle2, generator);
@@ -126,7 +126,7 @@ void ParticleSystem::fireworkSystem()
 }
 
 void ParticleSystem::gravitySystem() {
-	gravityGenerator = new GravityGenerator(Vector3(0, -9.8, 0), 100);
+	gravityGenerator = new GravityGenerator(Vector3(0, -9.8, 0), 100, "gravity1");
 	forceGenerators.push_back(gravityGenerator);
 }
 
@@ -137,22 +137,75 @@ void ParticleSystem::dragSystem()
 
 void ParticleSystem::windSystem()
 {
-	windGenerator = new WindGenerator(Vector3(5, 0, 0), 1, 0);
+	windGenerator = new WindGenerator(Vector3(5, 0, 0), 1, 0, "wind1");
 	forceGenerators.push_back(windGenerator);
 }
 
 void ParticleSystem::whirlwindSystem()
 {
-	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 1);
+	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 1, "whirlwind1");
 	forceGenerators.push_back(whirlwindGenerator);
 }
 
 void ParticleSystem::explosionSystem() {
-	ExplosionGenerator* exp = new ExplosionGenerator({ 0,0,0 }, 20, 100, .15);
+	ExplosionGenerator* exp = new ExplosionGenerator({ 0,0,0 }, 20, 100, .15, "explosion1");
 	for (auto it = particles.begin(); it != particles.end();) {
 		forces.addRegistry(exp, (*it));
 		it++;
 	}
+}
+
+void ParticleSystem::springSystem()
+{
+	if (getForce("spring1") && getForce("spring2")) {
+		eraseForce("spring1");
+		eraseForce("spring2");
+		return;
+	}
+	Particle* p1 = new Particle({ -10, 10, 0 }, { 0, 0, 0 }, 0.85, { 0, 0, 0 }, 2.0, 100);
+	Particle* p2 = new Particle({ 10, 10, 0 }, { 0, 0, 0 }, 0.85, { 0, 0, 0 }, 2.0, 100);
+
+	SpringGenerator* f1 = new SpringGenerator(1, 10, p2, "spring1");
+	f1->setActive();
+	forces.addRegistry(f1, p1);
+	SpringGenerator* f2 = new SpringGenerator(1, 10, p1, "spring2");
+	f2->setActive();
+	forces.addRegistry(f2, p2);
+	forceGenerators.push_back(f1);
+	particles.push_back(p1);
+	forceGenerators.push_back(f2);
+	particles.push_back(p2);
+
+}
+
+void ParticleSystem::AnchoredSystem()
+{
+}
+
+ParticleGenerator* ParticleSystem::getGenerator(string nombre)
+{
+	for (auto it = generators.begin(); it != generators.end();)
+	{
+		if ((*it)->getName() == nombre) {
+			return (*it);
+		}
+		else
+			it++;
+	}
+	return nullptr;
+}
+
+ForceGenerator* ParticleSystem::getForce(string nombre)
+{
+	for (auto it = forceGenerators.begin(); it != forceGenerators.end();)
+	{
+		if ((*it)->getName() == nombre) {
+			return (*it);
+		}
+		else
+			it++;
+	}
+	return nullptr;
 }
 
 void ParticleSystem::eraseGenerator(string nombre) {

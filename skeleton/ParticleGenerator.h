@@ -47,7 +47,7 @@ class UniformParticleGenerator : public ParticleGenerator
 {
 public:
 
-	UniformParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num);
+	UniformParticleGenerator(string nombre, Particle* part, double probab, Vector3 pose, Vector3 veloci, int num);
 	list<Particle*> generateParticle() override;
 protected:
 
@@ -76,7 +76,7 @@ class FireworkGenerator : public ParticleGenerator
 {
 public:
 
-	FireworkGenerator(Particle* part, Vector3 pose, int num);
+	FireworkGenerator(string nombre, Particle* part, Vector3 pose, int num);
 	list<Particle*> generateParticle() override;
 
 protected:

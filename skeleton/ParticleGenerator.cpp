@@ -11,9 +11,9 @@ ParticleGenerator::~ParticleGenerator()
 	}
 }
 
-UniformParticleGenerator::UniformParticleGenerator(Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
+UniformParticleGenerator::UniformParticleGenerator(string nombre, Particle* part, double probab, Vector3 pose, Vector3 veloci, int num)
 {
-	name = "uniform";
+	name = nombre;
 	particle = part;
 	nParticles = num;
 
@@ -119,9 +119,9 @@ list<Particle*> GaussianParticleGenerator::generateParticle()
 	return listParticles;
 }
 
-FireworkGenerator::FireworkGenerator(Particle* part, Vector3 pose, int num)
+FireworkGenerator::FireworkGenerator(string nombre, Particle* part, Vector3 pose, int num)
 {
-	name = "firework";
+	name = nombre;
 	particle = part;
 	nParticles = num;
 	fireworkPos = pose;
