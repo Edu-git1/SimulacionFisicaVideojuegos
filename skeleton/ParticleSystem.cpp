@@ -27,11 +27,11 @@ void ParticleSystem::update(double t)
 		}
 	}
 	for (auto f : forceGenerators) {
-		for (auto it = particles.begin(); it != particles.end();) {
-			if (f->isActive()) {
+		if (f->isActive()) {
+			for (auto it = particles.begin(); it != particles.end();) {
 				forces.addRegistry(f, (*it));
+				it++;
 			}
-			it++;
 		}
 	}
 
@@ -95,13 +95,13 @@ void ParticleSystem::fogSystem()
 	Vector3 pose = { 0.0, 10.0, 0.0 };
 	Vector3 vel = { 0, 0, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 5.0;
+	double time = 10.0;
 	double mass = 10;
 	double damp = 0.85;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.49f, 0.49f, 0.49f, 1 });
 
-	fogGenerator = new GaussianParticleGenerator("niebla", p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 10);
+	fogGenerator = new GaussianParticleGenerator("niebla", p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 2);
 
 	generators.push_back(fogGenerator);
 }
@@ -157,11 +157,6 @@ void ParticleSystem::explosionSystem() {
 
 void ParticleSystem::springSystem()
 {
-	if (getForce("spring1") && getForce("spring2")) {
-		eraseForce("spring1");
-		eraseForce("spring2");
-		return;
-	}
 	Particle* p1 = new Particle({ -10, 10, 0 }, { 0, 0, 0 }, 0.85, { 0, 0, 0 }, 2.0, 100);
 	Particle* p2 = new Particle({ 10, 10, 0 }, { 0, 0, 0 }, 0.85, { 0, 0, 0 }, 2.0, 100);
 
@@ -171,9 +166,7 @@ void ParticleSystem::springSystem()
 	SpringGenerator* f2 = new SpringGenerator(1, 10, p1, "spring2");
 	f2->setActive();
 	forces.addRegistry(f2, p2);
-	forceGenerators.push_back(f1);
 	particles.push_back(p1);
-	forceGenerators.push_back(f2);
 	particles.push_back(p2);
 
 }
@@ -212,7 +205,9 @@ void ParticleSystem::eraseGenerator(string nombre) {
 	for (auto it = generators.begin(); it != generators.end();)
 	{
 		if ((*it)->getName() == nombre) {
-			generators.erase(it);
+			if((*it)->isActive())
+				(*it)->setActive();
+			it = generators.erase(it);
 			it = generators.end();
 		}
 		else
@@ -224,7 +219,9 @@ void ParticleSystem::eraseForce(string nombre) {
 	for (auto it = forceGenerators.begin(); it != forceGenerators.end();)
 	{
 		if ((*it)->name == nombre) {
-			forceGenerators.erase(it);
+			if ((*it)->isActive())
+				(*it)->setActive();
+			it = forceGenerators.erase(it);
 			it = forceGenerators.end();
 		}		
 		else
