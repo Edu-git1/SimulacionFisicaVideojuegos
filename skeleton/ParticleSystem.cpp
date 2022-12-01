@@ -11,6 +11,10 @@ ParticleSystem::~ParticleSystem()
 		delete f;
 		f = nullptr;
 	}
+	for (auto f : forceGenerators) {
+		delete f;
+		f = nullptr;
+	}
 	//particles.clear();
 	//generators.clear();
 }

@@ -88,6 +88,31 @@ public:
 		name = nombre;
 		other = new Particle(anchorPos, { 0,0,0 }, 0, { 0,0,0 }, 0, 100);
 	};
-	~AnchoredSpring() { delete other; };
+	virtual ~AnchoredSpring() { delete other; };
+};
+
+
+class BungeeGenerator : public SpringGenerator {
+public:
+	BungeeGenerator(double k, double resting_length, Particle* other, string nombre): SpringGenerator(k, resting_length, other, "") {};
+	virtual ~BungeeGenerator() {};
+	void updateForce(Particle* part) override;
+};
+
+class BuoyancyGenerator : public ForceGenerator {
+public:
+	BuoyancyGenerator(float h, float v, float d, Particle* liquid_surface, string nombre) :
+		height(h), volume(v), density(d), liquid_particle(liquid_surface)
+	{
+		name = nombre;
+	};
+	virtual ~BuoyancyGenerator() {};
+	void updateForce(Particle* part) override;
+
+protected:
+	float height;
+	float volume;
+	float density;
+	Particle* liquid_particle;
 };
 

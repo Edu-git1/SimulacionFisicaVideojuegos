@@ -51,6 +51,7 @@ void ExplosionGenerator::updateForce(Particle* particle)
 
 void SpringGenerator::updateForce(Particle* particle)
 {
+	if (fabs(1/particle->getMass()) <= 1e-10) return;
 	Vector3 force = other->getPos() - particle->getPos();
 
 	const float length = force.normalize();
@@ -59,4 +60,43 @@ void SpringGenerator::updateForce(Particle* particle)
 	force *= deltaX * _k;
 
 	particle->addForce(force);
+}
+
+void BungeeGenerator::updateForce(Particle* particle)
+{
+	if (fabs(1/particle->getMass()) <= 1e-10) return;
+
+	Vector3 force = other->getPos() - particle->getPos();
+
+	const float length = force.normalize();
+	const float delta_x = length - resting_length;
+
+	if (delta_x <= 0.0f) return;
+
+	force *= delta_x * _k;
+
+	particle->addForce(force);
+}
+
+void BuoyancyGenerator::updateForce(Particle* particle)
+{
+	if (fabs(1/particle->getMass()) <= 1e-10) return;
+
+	float h = particle->getPos().y;
+	float h0 = liquid_particle->getPos().y;
+
+	Vector3 f(0, 0, 0);
+	float immersed = 0.0;
+	if (h0 - h > height * 0.5) {
+		immersed = 1.0;
+	}
+	else if (h - h0 > height * 0.5) {
+		immersed = 0.0;
+	}
+	else {
+		immersed = (h0 - h) / height + 0.5;
+	}
+
+	f.y = density * volume * immersed * 9.8;
+	particle->addForce(f);
 }

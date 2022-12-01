@@ -27,7 +27,7 @@ public:
 	}
 
 	void addRegistry(ForceGenerator* generator, Particle* part) {
-		if(!alreadyRegistered(generator, part))
+		//if(!alreadyRegistered(generator, part))
 			insert({ generator, part });
 	}
 
