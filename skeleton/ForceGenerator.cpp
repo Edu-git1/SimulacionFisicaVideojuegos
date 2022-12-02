@@ -7,14 +7,14 @@ GravityGenerator::GravityGenerator(Vector3& gravity, double t, string nombre) {
 }
 
 void GravityGenerator::updateForce(Particle* particle) {
-	if (1/particle->getMass() <= 0.f)
+	if (1/particle->getMass() <= 1e-10f)
 		return;
 	particle->addForce(gravedad * particle->getMass());
 }
 
 void WindGenerator::updateForce(Particle* particle)
 {
-	if (1/particle->getMass() <= 0.0f) return;
+	if (1/particle->getMass() <= 1e-10f) return;
 	Vector3 pVel = particle->getVel();
 	Vector3 diffVel = velocidad - pVel;
 	Vector3 force = _k1 * diffVel + _k2 * diffVel.magnitude() * diffVel;
@@ -23,7 +23,7 @@ void WindGenerator::updateForce(Particle* particle)
 
 void DragGenerator::updateForce(Particle* particle)
 {
-	if (1 / particle->getMass() <= 0.f) return;
+	if (1 / particle->getMass() <= 1e-10f) return;
 
 	particle->addForce(k * particle->getVel());
 }
@@ -57,23 +57,9 @@ void SpringGenerator::updateForce(Particle* particle)
 	const float length = force.normalize();
 	const float deltaX= length - resting_length;
 
+	if (deltaX <= 0.f) return;
+
 	force *= deltaX * _k;
-
-	particle->addForce(force);
-}
-
-void BungeeGenerator::updateForce(Particle* particle)
-{
-	if (fabs(1/particle->getMass()) <= 1e-10) return;
-
-	Vector3 force = other->getPos() - particle->getPos();
-
-	const float length = force.normalize();
-	const float delta_x = length - resting_length;
-
-	if (delta_x <= 0.0f) return;
-
-	force *= delta_x * _k;
 
 	particle->addForce(force);
 }

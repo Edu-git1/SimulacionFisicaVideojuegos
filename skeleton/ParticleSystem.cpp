@@ -84,7 +84,7 @@ void ParticleSystem::fountainSystem()
 	Vector3 vel = { 0, 10.0, 10.0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
 	double time = 5.0;
-	double mass = 10;
+	double mass = 50;
 	double damp = 0.95;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.0f, 0.0f, 1.f, 1 });
@@ -175,8 +175,26 @@ void ParticleSystem::springSystem()
 
 }
 
-void ParticleSystem::AnchoredSystem()
+void ParticleSystem::anchoredSystem()
 {
+	Particle* p = new Particle({ 0,0,0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 5, 20);
+	AnchoredSpring* spring = new AnchoredSpring(1, 1, Vector3(0, 10, 0), "anchor1");
+	forces.addRegistry(spring, p);
+	DragGenerator* drag = new DragGenerator(0.5, "drag1");
+	forces.addRegistry(drag, p);
+	particles.push_back(p);
+	forceGenerators.push_back(drag);
+	forceGenerators.push_back(spring);
+}
+
+void ParticleSystem::buoyancySystem() {
+	Particle* liquid = new Particle({ 0,0,0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 0, 20, CreateShape(physx::PxBoxGeometry(20, 2, 20)));
+	liquid->setColor(Vector4(0, 0, 1, 1));
+	Particle* p = new Particle({ 0,-5, 0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 5, 20, CreateShape(physx::PxBoxGeometry(3, 3, 3)));
+	BuoyancyGenerator* bg = new BuoyancyGenerator(5, 27, 1, liquid, "boya1");
+	forces.addRegistry(bg, p);
+	forceGenerators.push_back(bg);
+	particles.push_back(p);
 }
 
 ParticleGenerator* ParticleSystem::getGenerator(string nombre)

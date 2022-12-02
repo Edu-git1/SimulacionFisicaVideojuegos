@@ -52,7 +52,8 @@ public:
 	void explosionSystem();
 
 	void springSystem();
-	void AnchoredSystem();
+	void anchoredSystem();
+	void buoyancySystem();
 
 	ParticleGenerator* getGenerator(string nombre);
 	ForceGenerator* getForce(string nombre);
@@ -80,4 +81,7 @@ protected:
 	WindGenerator* windGenerator;
 	DragGenerator* dragGenerator;
 	WhirlwindGenerator* whirlwindGenerator;
+	SpringGenerator* springGenerator;
+	AnchoredSpring* anchoredSpring;
+	BuoyancyGenerator* buoyancyGenerator;
 };

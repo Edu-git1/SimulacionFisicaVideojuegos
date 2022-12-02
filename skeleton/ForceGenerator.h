@@ -91,14 +91,6 @@ public:
 	virtual ~AnchoredSpring() { delete other; };
 };
 
-
-class BungeeGenerator : public SpringGenerator {
-public:
-	BungeeGenerator(double k, double resting_length, Particle* other, string nombre): SpringGenerator(k, resting_length, other, "") {};
-	virtual ~BungeeGenerator() {};
-	void updateForce(Particle* part) override;
-};
-
 class BuoyancyGenerator : public ForceGenerator {
 public:
 	BuoyancyGenerator(float h, float v, float d, Particle* liquid_surface, string nombre) :

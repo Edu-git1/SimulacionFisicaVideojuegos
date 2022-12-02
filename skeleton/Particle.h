@@ -10,7 +10,7 @@ enum shotType { PISTOL, FIREBALL, CANONBALL };
 
 class Particle {
 public:
-	Particle(Vector3 pos, Vector3 vel, double damp, Vector3 aceleracion, float mass, double time);
+	Particle(Vector3 pos, Vector3 vel, double damp, Vector3 aceleracion, float mass, double time, physx::PxShape* sh = CreateShape(physx::PxSphereGeometry(1)));
 
 	virtual ~Particle();
 
@@ -31,7 +31,7 @@ public:
 	void setColor(Vector4 color) { renderItem->color = color; };
 	bool isAlive() { return alive; };
 	void addForce(Vector3 force) { fuerza += force; };
-	void eraseForce() { fuerza = Vector3{ 0, 0, 0 }; }
+	void eraseForce() { fuerza = Vector3{ 0, 0, 0 }; };
 
 private:
 
@@ -41,6 +41,7 @@ private:
 	Vector3 posi;
 	Vector3 fuerza = {0, 0, 0};
 	physx::PxTransform pose;
+	physx::PxShape* shape;
 	RenderItem* renderItem;
 	float masa;
 	double startTime = 0;

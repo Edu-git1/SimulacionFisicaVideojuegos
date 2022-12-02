@@ -199,6 +199,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'y':
 		particleSystem->springSystem();
 		break;
+	case 'n':
+		particleSystem->anchoredSystem();
+		break;
+	case 'l':
+		particleSystem->buoyancySystem();
+		break;
 	default:
 		break;
 	}
