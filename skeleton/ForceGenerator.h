@@ -48,12 +48,13 @@ protected:
 
 class WhirlwindGenerator : public WindGenerator {
 public:
-	WhirlwindGenerator(Vector3 center, float k1, float k2, float kt, string nombre) : WindGenerator(Vector3(0), k1, k2, ""), ojo(center), _Kt(kt) { name = nombre; };
+	WhirlwindGenerator(Vector3 center, float k1, float k2, float kt, double radio, string nombre) : WindGenerator(Vector3(0), k1, k2, ""), ojo(center), _Kt(kt), radius(radio) { name = nombre; };
 	~WhirlwindGenerator() {};
 	void updateForce(Particle* part) override;
 protected:
 	Vector3 ojo;
 	float _Kt;
+	double radius;
 };
 
 class ExplosionGenerator : public ForceGenerator {
@@ -71,20 +72,23 @@ protected:
 
 class SpringGenerator : public ForceGenerator {
 public:
-	SpringGenerator(double k, double restingLength, Particle* otra, string nombre) : _k(k), resting_length(restingLength), other(otra) { name = nombre; };
+	SpringGenerator(double k, double restingLength, Particle* otra, double min, double max, double rup, string nombre) : _k(k), resting_length(restingLength), other(otra), minX(min), maxX(max), rupturaX(rup) { name = nombre; };
 	~SpringGenerator() {};
 	void updateForce(Particle* part) override;
 	inline void setK(double k) { _k = k; };
 protected:
 	double _k;
 	double resting_length;
+	double minX;
+	double maxX;
+	double rupturaX;
 	Particle* other;
 };
 
 
 class AnchoredSpring : public SpringGenerator {
 public:
-	AnchoredSpring(double k, double restingLength, const Vector3& anchorPos, string nombre): SpringGenerator(k, restingLength, nullptr, "") {
+	AnchoredSpring(double k, double restingLength, const Vector3& anchorPos, double min, double max, double rup, string nombre): SpringGenerator(k, restingLength, nullptr, min, max, rup, "") {
 		name = nombre;
 		other = new Particle(anchorPos, { 0,0,0 }, 0, { 0,0,0 }, 0, 100);
 	};

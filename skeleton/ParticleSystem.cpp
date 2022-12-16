@@ -21,7 +21,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::update(double t)
 {
-	if (particles.size() < 100) {
+	if (particles.size() < 200) {
 		for (auto g : generators) {
 			if (g->isActive()) {
 				for (auto p : g->generateParticle()) {
@@ -81,9 +81,9 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string name)
 void ParticleSystem::fountainSystem()
 {
 	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 10.0, 10.0 };
+	Vector3 vel = { 0, 0, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 5.0;
+	double time = 20.0;
 	double mass = 50;
 	double damp = 0.95;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
@@ -99,13 +99,13 @@ void ParticleSystem::fogSystem()
 	Vector3 pose = { 0.0, 10.0, 0.0 };
 	Vector3 vel = { 0, 0, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 10.0;
+	double time = 20.0;
 	double mass = 10;
 	double damp = 0.85;
 	Particle* p = new Particle(pose, vel, damp, acc, mass, time);
 	p->setColor(Vector4{ 0.49f, 0.49f, 0.49f, 1 });
 
-	fogGenerator = new GaussianParticleGenerator("niebla", p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 2);
+	fogGenerator = new GaussianParticleGenerator("niebla", p, 0.7, { 5, 5, 5 }, { 2, 2, 2 }, 30);
 
 	generators.push_back(fogGenerator);
 }
@@ -141,13 +141,13 @@ void ParticleSystem::dragSystem()
 
 void ParticleSystem::windSystem()
 {
-	windGenerator = new WindGenerator(Vector3(5, 0, 0), 1, 0, "wind1");
+	windGenerator = new WindGenerator(Vector3(20, 0, 0), 1, 0, "wind1");
 	forceGenerators.push_back(windGenerator);
 }
 
 void ParticleSystem::whirlwindSystem()
 {
-	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 1, "whirlwind1");
+	whirlwindGenerator = new WhirlwindGenerator(Vector3(0, 0, 0), 1, 0.1, 5, 50, "whirlwind1");
 	forceGenerators.push_back(whirlwindGenerator);
 }
 
@@ -164,10 +164,10 @@ void ParticleSystem::springSystem()
 	Particle* p1 = new Particle({ -10, 10, 0 }, { 0, 0, 0 }, 0.85, { 0, 0, 0 }, 2.0, 100);
 	Particle* p2 = new Particle({ 10, 10, 0 }, { 0, 0, 0 }, 0.85, { 0, 0, 0 }, 2.0, 100);
 
-	SpringGenerator* f1 = new SpringGenerator(1, 10, p2, "spring1");
+	SpringGenerator* f1 = new SpringGenerator(1, 10, p2, 0.5, 1, 2, "spring1");
 	f1->setActive();
 	forces.addRegistry(f1, p1);
-	SpringGenerator* f2 = new SpringGenerator(1, 10, p1, "spring2");
+	SpringGenerator* f2 = new SpringGenerator(1, 10, p1, 0.5, 1, 2, "spring2");
 	f2->setActive();
 	forces.addRegistry(f2, p2);
 	particles.push_back(p1);
@@ -178,7 +178,7 @@ void ParticleSystem::springSystem()
 void ParticleSystem::anchoredSystem()
 {
 	Particle* p = new Particle({ 0,0,0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 5, 20);
-	AnchoredSpring* spring = new AnchoredSpring(1, 1, Vector3(0, 10, 0), "anchor1");
+	AnchoredSpring* spring = new AnchoredSpring(1, 1, Vector3(0, 10, 0), 0.5, 1, 2, "anchor1");
 	forces.addRegistry(spring, p);
 	DragGenerator* drag = new DragGenerator(0.5, "drag1");
 	forces.addRegistry(drag, p);
@@ -190,10 +190,13 @@ void ParticleSystem::anchoredSystem()
 void ParticleSystem::buoyancySystem() {
 	Particle* liquid = new Particle({ 0,0,0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 0, 20, CreateShape(physx::PxBoxGeometry(20, 2, 20)));
 	liquid->setColor(Vector4(0, 0, 1, 1));
-	Particle* p = new Particle({ 0,-5, 0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 5, 20, CreateShape(physx::PxBoxGeometry(3, 3, 3)));
-	BuoyancyGenerator* bg = new BuoyancyGenerator(5, 27, 1, liquid, "boya1");
+	Particle* p = new Particle({ 0,-5, 0 }, { 0,0,0 }, 0.99, { 0,0,0 }, 1, 20, CreateShape(physx::PxBoxGeometry(3, 3, 3)));
+	BuoyancyGenerator* bg = new BuoyancyGenerator(20, 0.002, 1000, liquid, "boya1");
+	DragGenerator* dg = new DragGenerator(0.1, "drag2");
 	forces.addRegistry(bg, p);
 	forceGenerators.push_back(bg);
+	forces.addRegistry(dg, p);
+	forceGenerators.push_back(dg);
 	particles.push_back(p);
 }
 

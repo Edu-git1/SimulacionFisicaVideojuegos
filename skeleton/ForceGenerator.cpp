@@ -31,7 +31,10 @@ void DragGenerator::updateForce(Particle* particle)
 void WhirlwindGenerator::updateForce(Particle* particle)
 {
 	Vector3 dist = particle->getPos();
-	velocidad = _Kt * Vector3(-(dist.z) - (ojo.z), 50 - (dist.y)-ojo.y, dist.x - (ojo.x));
+	Vector3 distV = dist - ojo;
+	const float mod = distV.normalize();
+	if (mod > radius) return;
+	velocidad = _Kt * Vector3(-((dist.z) - (ojo.z)), 20 - ((dist.y)-ojo.y), dist.x - (ojo.x));
 	WindGenerator::updateForce(particle);
 }
 
@@ -56,10 +59,9 @@ void SpringGenerator::updateForce(Particle* particle)
 
 	const float length = force.normalize();
 	const float deltaX= length - resting_length;
-
-	if (deltaX <= 0.f) return;
-
 	force *= deltaX * _k;
+
+	if (length < minX) return;
 
 	particle->addForce(force);
 }
@@ -84,5 +86,6 @@ void BuoyancyGenerator::updateForce(Particle* particle)
 	}
 
 	f.y = density * volume * immersed * 9.8;
+	/*cout << f.y << endl;*/
 	particle->addForce(f);
 }
