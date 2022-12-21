@@ -14,6 +14,9 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ParticleGenerator.cpp" />
     <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="SolidParticle.cpp" />
+    <ClCompile Include="SolidGenerator.cpp" />
+    <ClCompile Include="ZaWarudo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -240,6 +243,9 @@
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="ForceRegistry.h" />
     <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="SolidParticle.h" />
+    <ClInclude Include="SolidGenerator.h" />
+    <ClInclude Include="ZaWarudo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

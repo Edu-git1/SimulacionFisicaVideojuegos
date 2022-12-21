@@ -1,5 +1,7 @@
 #pragma once
 #include "Particle.h"
+#include "SolidParticle.h"
+#include "core.hpp"
 #include <list>
 #include <string>
 using namespace std;
@@ -110,5 +112,22 @@ protected:
 	float volume;
 	float density;
 	Particle* liquid_particle;
+};
+
+class SolidForceGenerator
+{
+public:
+	virtual void updateForce(SolidParticle* rb, double t) = 0;
+	std::string name;
+	double t = -1;
+};
+
+class SolidWindGenerator : public SolidForceGenerator {
+public:
+	SolidWindGenerator(Vector3 windVel, float k1, float k2);
+	void updateForce(SolidParticle* rb, double t) override;
+protected:
+	float _k1, _k2;
+	Vector3 _windVel;
 };
 

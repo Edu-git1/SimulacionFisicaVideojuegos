@@ -8,6 +8,7 @@
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
 #include "ParticleSystem.h"
+#include "ZaWarudo.h"
 //#include "Particle.h"
 
 #include <iostream>
@@ -29,7 +30,7 @@ PxPvd* gPvd = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 
-ParticleSystem* particleSystem = NULL;
+//ParticleSystem* particleSystem = NULL;
 
 Particle* gParticula = NULL;
 
@@ -40,6 +41,9 @@ vector<Particle*> particles;
 shotType currentShot = PISTOL;
 
 ContactReportCallback gContactReportCallback;
+
+SolidParticle* part;
+ZaWarudo* zw;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -66,14 +70,17 @@ void initPhysics(bool interactive)
 
 	gScene = gPhysics->createScene(sceneDesc);
 
-	particleSystem = new ParticleSystem({ 0,0,0 });
+	/*particleSystem = new ParticleSystem({ 0,0,0 });
 
 	particleSystem->gravitySystem();
 	particleSystem->dragSystem();
 	particleSystem->windSystem();
 	particleSystem->whirlwindSystem();
 	particleSystem->fogSystem();
-	particleSystem->fountainSystem();
+	particleSystem->fountainSystem();*/
+
+	zw = new ZaWarudo(gScene, gPhysics);
+	zw->generatorDemo();
 }
 
 
@@ -86,16 +93,17 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+	zw->update(t);
 
-	particleSystem->update(t);
+	/*particleSystem->update(t);*/
 
-	for (int i = 0; i < proyectiles.size(); i++) {
+	/*for (int i = 0; i < proyectiles.size(); i++) {
 		proyectiles[i]->Update(t);
 		if (proyectiles[i]->getPos().y < 0.0f || proyectiles[i]->getTime() <= 0 || proyectiles[i]->getPos().z > 200.0f) {
 			delete proyectiles[i];
 			proyectiles.erase(proyectiles.begin() + i);
 		}
-	}
+	}*/
 }
 
 // Function to clean data
@@ -114,8 +122,9 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
-	delete particleSystem;
-	}
+	//delete particleSystem;
+	delete part;
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
@@ -130,7 +139,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		break;
 	}
-	case 'p':
+	/*case 'p':
 		if (currentShot == PISTOL) {
 			currentShot = FIREBALL;
 		}
@@ -207,6 +216,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	default:
 		break;
+	}*/
 	}
 }
 

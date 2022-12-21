@@ -41,3 +41,41 @@ public:
 		}
 	}
 };
+
+class SolidForceRegistry : std::multimap<SolidForceGenerator*, SolidParticle*>
+{
+public:
+
+	bool alreadyRegistered(SolidForceGenerator* generator, SolidParticle* part) {
+		for (auto it = begin(); it != end();) {
+			if (it->first == generator && it->second == part) {
+				return true;
+			}
+			else
+				it++;
+		}
+		return false;
+	}
+
+	void updateForces(float duration) {
+		for (auto it = begin(); it != end(); ++it) {
+			it->first->updateForce(it->second, duration);
+		}
+	}
+
+	void addRegistry(SolidForceGenerator* generator, SolidParticle* part) {
+		if (!alreadyRegistered(generator, part))
+			insert({ generator, part });
+	}
+
+	void deleteRigidRegistry(SolidParticle* part) {
+		for (auto it = begin(); it != end();) {
+			if (it->second == part) {
+				it = erase(it);
+			}
+			else {
+				++it;
+			}
+		}
+	}
+};
