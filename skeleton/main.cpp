@@ -38,8 +38,6 @@ vector<Particle*> proyectiles;
 
 vector<Particle*> particles;
 
-shotType currentShot = PISTOL;
-
 ContactReportCallback gContactReportCallback;
 
 SolidParticle* part;
@@ -47,7 +45,7 @@ ZaWarudo* zw;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
-{
+{	
 	PX_UNUSED(interactive);
 
 	gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gAllocator, gErrorCallback);

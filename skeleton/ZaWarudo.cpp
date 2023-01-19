@@ -10,6 +10,7 @@ ZaWarudo::ZaWarudo(PxScene* scene, PxPhysics* physics)
 	suelo->attachShape(*shape);
 	scene->addActor(*suelo);
 	sueloRender = new RenderItem(shape, suelo, { 0, 0, 1, 1 });
+	cannon = new Cannon();
 }
 
 ZaWarudo::~ZaWarudo()
@@ -48,6 +49,7 @@ void ZaWarudo::update(double t) {
 			++it;
 		}
 	}
+	cannon->update(t, GetCamera()->getEye(), GetCamera()->getDir());
 }
 
 void ZaWarudo::generatorDemo() {

@@ -48,10 +48,12 @@ Camera::Camera(const PxVec3& eye, const PxVec3& dir)
 
 void Camera::handleMouse(int button, int state, int x, int y)
 {
-	PX_UNUSED(state);
-	PX_UNUSED(button);
-	mMouseX = x;
-	mMouseY = y;
+	if(raton){
+		PX_UNUSED(state);
+		PX_UNUSED(button);
+		mMouseX = x;
+		mMouseY = y;
+	}
 }
 
 bool Camera::handleKey(unsigned char key, int x, int y, float speed)
@@ -62,8 +64,10 @@ bool Camera::handleKey(unsigned char key, int x, int y, float speed)
 	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
 	switch(toupper(key))
 	{
-	case 'W':	mEye += mDir*2.0f*speed;		break;
-	case 'S':	mEye -= mDir*2.0f*speed;		break;
+		if (raton) {
+	case 'W':	mDir.y += 0.02f * speed;		break;
+	case 'S':	mDir.y -= 0.02f * speed;		break;
+	}
 	case 'A':	mEye -= viewY*2.0f*speed;		break;
 	case 'D':	mEye += viewY*2.0f*speed;		break;
 	default:							return false;
@@ -80,20 +84,22 @@ void Camera::handleAnalogMove(float x, float y)
 
 void Camera::handleMotion(int x, int y)
 {
-	int dx = mMouseX - x;
-	int dy = mMouseY - y;
+	if (raton) {
+		int dx = mMouseX - x;
+		int dy = mMouseY - y;
 
-	PxVec3 viewY = mDir.cross(PxVec3(0,1,0)).getNormalized();
+		PxVec3 viewY = mDir.cross(PxVec3(0, 1, 0)).getNormalized();
 
-	PxQuat qx(PxPi * dx / 180.0f, PxVec3(0,1,0));
-	mDir = qx.rotate(mDir);
-	PxQuat qy(PxPi * dy / 180.0f, viewY);
-	mDir = qy.rotate(mDir);
+		PxQuat qx(PxPi * dx / 180.0f, PxVec3(0, 1, 0));
+		mDir = qx.rotate(mDir);
+		PxQuat qy(PxPi * dy / 180.0f, viewY);
+		mDir = qy.rotate(mDir);
 
-	mDir.normalize();
+		mDir.normalize();
 
-	mMouseX = x;
-	mMouseY = y;
+		mMouseX = x;
+		mMouseY = y;
+	}
 }
 
 PxTransform Camera::getTransform() const

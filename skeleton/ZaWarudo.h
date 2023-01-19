@@ -5,6 +5,7 @@
 #include "SolidGenerator.h"
 #include "ForceGenerator.h"
 #include "ForceRegistry.h"
+#include "Cannon.h"
 
 using namespace physx;
 using namespace std;
@@ -27,4 +28,5 @@ protected:
 	SolidGenerator* gen = nullptr;
 	PxRigidStatic* suelo;
 	RenderItem* sueloRender;
+	Cannon* cannon;
 };

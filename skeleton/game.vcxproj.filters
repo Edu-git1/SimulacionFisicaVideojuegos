@@ -17,6 +17,7 @@
     <ClCompile Include="SolidParticle.cpp" />
     <ClCompile Include="SolidGenerator.cpp" />
     <ClCompile Include="ZaWarudo.cpp" />
+    <ClCompile Include="Cannon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="SolidParticle.h" />
     <ClInclude Include="SolidGenerator.h" />
     <ClInclude Include="ZaWarudo.h" />
+    <ClInclude Include="Cannon.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

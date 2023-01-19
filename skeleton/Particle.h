@@ -6,8 +6,6 @@
 #include <iostream>
 using namespace std;
 
-enum shotType { PISTOL, FIREBALL, CANONBALL };
-
 class Particle {
 public:
 	Particle(Vector3 pos, Vector3 vel, double damp, Vector3 aceleracion, float mass, double time, physx::PxShape* sh = CreateShape(physx::PxSphereGeometry(1)));
