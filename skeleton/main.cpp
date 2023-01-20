@@ -7,7 +7,6 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
-#include "ParticleSystem.h"
 #include "ZaWarudo.h"
 //#include "Particle.h"
 
@@ -32,15 +31,10 @@ PxScene* gScene = NULL;
 
 //ParticleSystem* particleSystem = NULL;
 
-Particle* gParticula = NULL;
-
-vector<Particle*> proyectiles;
-
 vector<Particle*> particles;
 
 ContactReportCallback gContactReportCallback;
 
-SolidParticle* part;
 ZaWarudo* zw;
 
 // Initialize physics engine
@@ -121,7 +115,6 @@ void cleanupPhysics(bool interactive)
 	
 	gFoundation->release();
 	//delete particleSystem;
-	delete part;
 }
 
 // Function called when a key is pressed
@@ -137,18 +130,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		break;
 	}
-	/*case 'p':
-		if (currentShot == PISTOL) {
-			currentShot = FIREBALL;
-		}
-		else if (currentShot == FIREBALL) {
-			currentShot = CANONBALL;
-		}
-		else {
-			currentShot = PISTOL;
-		}
+	case 'p':
+		zw->shoot();
 		break;
-	case 'q':
+	/*case 'q':
 	{
 		Vector3 eye = GetCamera()->getEye();
 		Vector3 dir = GetCamera()->getDir();
@@ -220,8 +205,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
-	PX_UNUSED(actor1);
-	PX_UNUSED(actor2);
+	if (actor1->getName() == "barco" && actor2->getName() == "bala" || actor1->getName() == "bala" && actor2->getName() == "barco")
+	{
+		zw->hit(actor1, actor2);
+	}
 }
 
 

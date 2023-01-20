@@ -94,7 +94,7 @@ SolidWindGenerator::SolidWindGenerator(Vector3 windVel, float k1, float k2) : _k
 {
 }
 
-void SolidWindGenerator::updateForce(SolidParticle* rb, double t)
+void SolidWindGenerator::updateForce(PxRigidBody* rb, double t)
 {
 	if (rb->getInvMass() <= 0) return;
 
@@ -103,4 +103,61 @@ void SolidWindGenerator::updateForce(SolidParticle* rb, double t)
 
 	Vector3 force = _k1 * diffVel + _k2 * diffVel.magnitude() * diffVel;
 	rb->addForce(force);
+}
+
+void SolidExplosionGenerator::updateForce(PxRigidBody* particle, double t)
+{
+	if (1 / particle->getMass() <= 1e-10f) return;
+	Vector3 distV = particle->getGlobalPose().p - center;
+
+	float dist = distV.normalize();
+	float r = dist * dist;
+	if (dist == 0) dist = 1e-5;
+	Vector3 force = (_k / r) * distV * exp(1 / _kt);
+	if (dist <= radio)
+		particle->addForce(force);
+}
+
+void SolidBuoyancy::updateForce(PxRigidBody* particle, double t)
+{
+	if (1 / particle->getMass() <= 1e-10f) return;
+
+	float depth = particle->getGlobalPose().p.y;
+	if (depth >= _waterHeight - _maxDepth) return;
+
+	physx::PxQuat rbRot = particle->getGlobalPose().q.getNormalized();
+
+	Vector3 buoyancyPoints[] = {
+		Vector3(-3, 0, 0),
+		Vector3(3, 0, 0),
+		Vector3(0, 0, 5),
+		Vector3(0, 0, -5),
+	};
+	Vector3 force = Vector3(0, 0, 0);
+
+	for (int i = 0; i < 4; i++) {
+		Vector3 point = rbRot.rotate(buoyancyPoints[i]);
+
+		point = point + particle->getGlobalPose().p;
+
+		force = calcForce(point.y, particle);
+
+		particle->addTorque(buoyancyPoints[i].cross(force));
+	}
+
+	particle->addForce(calcForce(depth, particle));
+}
+
+Vector3 SolidBuoyancy::calcForce(float depth, PxRigidBody* particle)
+{
+	Vector3 force(0, 0, 0);
+
+	if (depth <= _waterHeight - _maxDepth) {
+		force.y = (_liquidDensity * _volume);
+		return force;
+	}
+
+	force.y = (_liquidDensity * _volume * (depth - _maxDepth - _waterHeight) * 9.8 / 2 * _maxDepth);
+
+	return    force;
 }

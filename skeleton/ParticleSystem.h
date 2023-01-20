@@ -29,7 +29,7 @@ public:
 	void activateFog() { fogGenerator->setActive(); };
 	bool isFogActive() { return fogGenerator->isActive(); };
 
-	void fireworkSystem();
+	void fireworkSystem(Vector3 pos);
 	void activateFirework() { fireworkGenerator->setActive(); };
 	bool isFireworkActive() { return fireworkGenerator->isActive(); };
 
@@ -54,11 +54,14 @@ public:
 	void springSystem();
 	void anchoredSystem();
 	void buoyancySystem();
+	
+	void shoot();
 
 	ParticleGenerator* getGenerator(string nombre);
 	ForceGenerator* getForce(string nombre);
 	void eraseGenerator(string nombre);
 	void eraseForce(string nombre);
+	void insertParticle(Particle* i) { particles.push_back(i); };
 
 protected:
 

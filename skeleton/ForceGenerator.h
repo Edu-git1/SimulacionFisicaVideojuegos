@@ -117,7 +117,7 @@ protected:
 class SolidForceGenerator
 {
 public:
-	virtual void updateForce(SolidParticle* rb, double t) = 0;
+	virtual void updateForce(PxRigidBody* rb, double t) = 0;
 	std::string name;
 	double t = -1;
 };
@@ -125,9 +125,41 @@ public:
 class SolidWindGenerator : public SolidForceGenerator {
 public:
 	SolidWindGenerator(Vector3 windVel, float k1, float k2);
-	void updateForce(SolidParticle* rb, double t) override;
+	void updateForce(PxRigidBody* rb, double t) override;
+	void changeWind() { _windVel = -_windVel; };
 protected:
 	float _k1, _k2;
 	Vector3 _windVel;
+};
+
+class SolidExplosionGenerator : public SolidForceGenerator {
+public:
+	SolidExplosionGenerator(Vector3 centro, float radius, float k, double kt) : center(centro), radio(radius), _k(k), _kt(kt), tiempo(0.0) {};
+	~SolidExplosionGenerator() {};
+	void updateForce(PxRigidBody* part, double t) override;
+protected:
+	Vector3 center;
+	float radio;
+	float _k;
+	double _kt;
+	double tiempo;
+};
+
+class SolidBuoyancy : public SolidForceGenerator {
+public:
+	SolidBuoyancy(float maxDepth, float volume, float waterHeight, float liquidDensity = 1000.0f, float viscosity = 0.5f) {
+		_maxDepth = maxDepth;
+		_volume = volume;
+		_waterHeight = waterHeight;
+		_liquidDensity = liquidDensity;
+		_viscosity = viscosity;
+		name = "Buoyancy";
+	};
+	void updateForce(PxRigidBody* rb, double t) override;
+	Vector3 calcForce(float depth, PxRigidBody* rb);
+
+protected:
+	float _maxDepth, _volume, _waterHeight, _liquidDensity, _viscosity;
+
 };
 

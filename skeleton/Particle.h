@@ -30,6 +30,10 @@ public:
 	bool isAlive() { return alive; };
 	void addForce(Vector3 force) { fuerza += force; };
 	void eraseForce() { fuerza = Vector3{ 0, 0, 0 }; };
+	void deregister(){
+		DeregisterRenderItem(renderItem);
+		renderItem = nullptr;
+	}
 
 private:
 

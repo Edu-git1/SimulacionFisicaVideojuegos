@@ -42,11 +42,11 @@ public:
 	}
 };
 
-class SolidForceRegistry : std::multimap<SolidForceGenerator*, SolidParticle*>
+class SolidForceRegistry : std::multimap<SolidForceGenerator*, PxRigidBody*>
 {
 public:
 
-	bool alreadyRegistered(SolidForceGenerator* generator, SolidParticle* part) {
+	bool alreadyRegistered(SolidForceGenerator* generator, PxRigidBody* part) {
 		for (auto it = begin(); it != end();) {
 			if (it->first == generator && it->second == part) {
 				return true;
@@ -63,12 +63,12 @@ public:
 		}
 	}
 
-	void addRegistry(SolidForceGenerator* generator, SolidParticle* part) {
+	void addRegistry(SolidForceGenerator* generator, PxRigidBody* part) {
 		if (!alreadyRegistered(generator, part))
 			insert({ generator, part });
 	}
 
-	void deleteRigidRegistry(SolidParticle* part) {
+	void deleteRigidRegistry(PxRigidBody* part) {
 		for (auto it = begin(); it != end();) {
 			if (it->second == part) {
 				it = erase(it);

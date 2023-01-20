@@ -8,6 +8,7 @@ SolidParticle::SolidParticle(physx::PxRigidDynamic* body, double tiempo, Vector4
 	PxShape* shape;
 	rigid->getShapes(&shape, 1);
 	render = new RenderItem(shape, rigid, color);
+	originalPos = getPosition();
 }
 
 SolidParticle::SolidParticle(physx::PxScene* scene, physx::PxPhysics* physx, Vector3 pos, Vector3 vel, double mass, double tiempo, Vector3 dims, Shape s, Vector4 color)
@@ -39,19 +40,17 @@ SolidParticle::SolidParticle(physx::PxScene* scene, physx::PxPhysics* physx, Vec
 	PxRigidBodyExt::updateMassAndInertia(*rigid, 1);
 	scene->addActor(*rigid);
 	render = new RenderItem(shape, rigid, color);
+	originalPos = getPosition();
 }
 
 SolidParticle::~SolidParticle() {
 	rigid->release();
 	DeregisterRenderItem(render);
+	render = nullptr;
 }
 
 void SolidParticle::update(double t) {
 	if (time > 0.0) startTime += t;
-}
-
-bool SolidParticle::isAlive() {
-	return startTime < time;
 }
 
 void SolidParticle::addForce(Vector3 f) {

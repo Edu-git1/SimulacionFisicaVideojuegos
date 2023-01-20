@@ -54,7 +54,7 @@ private:
 	physx::PxVec3	mDir;
 	int				mMouseX;
 	int				mMouseY;
-	bool raton = false;
+	bool raton = true;
 };
 
 

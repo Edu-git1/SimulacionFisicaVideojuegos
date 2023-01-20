@@ -49,6 +49,8 @@ void ParticleSystem::update(double t)
 			{
 				for (auto i : firework->explosiones())
 					particles.push_back(i);
+				particleBase->deregister();
+				particleBase = nullptr;
 
 			}
 			forces.eraseRegistry((*it));
@@ -61,7 +63,8 @@ void ParticleSystem::update(double t)
 			{
 				shared_ptr<FireworkGenerator> generator;
 				Particle* particle = new Particle(firework->getPos(), particleBase->getVel(), particleBase->getDamp(), particleBase->getAcc(), particleBase->getMass(), particleBase->getTime());
-				generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 200));
+				particle->setColor(Vector4{ 0, 0, 1, 1 });
+				generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 8));
 				firework->updateGenerator(generator);
 			}
 			it++;
@@ -110,22 +113,23 @@ void ParticleSystem::fogSystem()
 	generators.push_back(fogGenerator);
 }
 
-void ParticleSystem::fireworkSystem()
+void ParticleSystem::fireworkSystem(Vector3 pos)
 {
-	Vector3 pose = { 0.0, 10.0, 0.0 };
-	Vector3 vel = { 0, 20, 0 };
+	Vector3 pose = pos;
+	Vector3 vel = { 0, 1, 0 };
 	Vector3 acc = { 0.0f, 0.f, 0.0f };
-	double time = 2.0;
+	double time = 1;
 	double mass = 1;
 	double damp = 0.85;
 	Particle* particle = new Particle(pose, vel, damp, acc, mass, time);
 	particleBase = new Particle(pose, vel, damp, acc, mass, time);
+	particleBase->setColor(Vector4{ 0.0f, 0.0f, 1.0f, 1 });
 
 	shared_ptr<FireworkGenerator> generator;
-	generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 200));
+	generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 8));
 
-	Particle* particle2 = new Particle(pose, vel, damp, acc, mass, time);
-	Firework* fire = new Firework(particle2, generator);
+	Firework* fire = new Firework(new Particle(pose, vel, damp, acc, mass, time) , generator);
+	fire->setColor(Vector4{ 0.0f, 0.0f, 1.0f, 1 });
 	particles.push_back(fire);
 }
 
@@ -252,4 +256,8 @@ void ParticleSystem::eraseForce(string nombre) {
 		else
 			it++;
 	}
+}
+
+void ParticleSystem::shoot() {
+	
 }
