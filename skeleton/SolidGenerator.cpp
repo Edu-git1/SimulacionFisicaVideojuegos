@@ -39,7 +39,7 @@ Barco* GaussianBoats::generateParticles(double t)
 	spawnTime -= t;
 	if (spawnTime > 0.0021) return nullptr;
 	spawnTime = 5;
-	Vector3 pos = { pose.x + dev_pos.x + dist(random_generator), pose.y + dev_pos.y + dist(random_generator) ,pose.z + dev_pos.z + dist(random_generator) };
+	Vector3 pos = { pose.x + dev_pos.x + dist(random_generator), 5,pose.z + dev_pos.z + dist(random_generator) };
 	barco = new Barco(gScene, gPhysics, pos, 6);
 	
 	return barco;

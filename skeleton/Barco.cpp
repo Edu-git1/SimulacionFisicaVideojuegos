@@ -2,7 +2,7 @@
 
 Barco::Barco(PxScene* scene, PxPhysics* physics, Vector3 pos, float t)
 {
-	physx::PxTransform posBarco = physx::PxTransform({ -10, 5, 0 });
+	physx::PxTransform posBarco = physx::PxTransform(pos);
 	posBarco.q = physx::PxQuat(-45, physx::PxVec3(0, 1, 0));
 	boat = physics->createRigidDynamic(posBarco);
 	PxRigidBodyExt::updateMassAndInertia(*boat, 200);
@@ -12,7 +12,7 @@ Barco::Barco(PxScene* scene, PxPhysics* physics, Vector3 pos, float t)
 	scene->addActor(*boat);
 	boatRender = new RenderItem(boatShape, boat, { 0.5, 0.25, 0, 1 });
 	
-	physx::PxTransform posVela = physx::PxTransform({ -10, 13, 0 });
+	physx::PxTransform posVela = physx::PxTransform(pos + Vector3(0, 8, 0));
 	posVela.q = physx::PxQuat(-45, physx::PxVec3(0, 1, 0));
 	sail = physics->createRigidDynamic(posVela);
 	physx::PxRigidBodyExt::updateMassAndInertia(*sail, 50);
