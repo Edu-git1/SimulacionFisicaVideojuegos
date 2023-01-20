@@ -154,7 +154,7 @@ list<Particle*> FireworkGenerator::generateParticle()
 		Vector3 vel(x, y, z);
 
 		Particle* p = new Particle(particle->getPos(), particle->getVel(), particle->getDamp(), particle->getAcc(), particle->getMass(), particle->getTime());
-		p->setColor(Vector4{ 0.0f, 0.0f, 1.0f, 1 });
+		p->setColor(particle->getColor());
 		p->setPosition(fireworkPos);
 		p->setVelocity(vel.getNormalized() * 20);
 

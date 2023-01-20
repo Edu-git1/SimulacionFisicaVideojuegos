@@ -63,7 +63,7 @@ void ParticleSystem::update(double t)
 			{
 				shared_ptr<FireworkGenerator> generator;
 				Particle* particle = new Particle(firework->getPos(), particleBase->getVel(), particleBase->getDamp(), particleBase->getAcc(), particleBase->getMass(), particleBase->getTime());
-				particle->setColor(Vector4{ 0, 0, 1, 1 });
+				particle->setColor(particleBase->getColor());
 				generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 8));
 				firework->updateGenerator(generator);
 			}
@@ -113,7 +113,7 @@ void ParticleSystem::fogSystem()
 	generators.push_back(fogGenerator);
 }
 
-void ParticleSystem::fireworkSystem(Vector3 pos)
+void ParticleSystem::fireworkSystem(Vector3 pos, Vector4 color)
 {
 	Vector3 pose = pos;
 	Vector3 vel = { 0, 1, 0 };
@@ -123,13 +123,13 @@ void ParticleSystem::fireworkSystem(Vector3 pos)
 	double damp = 0.85;
 	Particle* particle = new Particle(pose, vel, damp, acc, mass, time);
 	particleBase = new Particle(pose, vel, damp, acc, mass, time);
-	particleBase->setColor(Vector4{ 0.0f, 0.0f, 1.0f, 1 });
+	particleBase->setColor(color);
 
 	shared_ptr<FireworkGenerator> generator;
 	generator.reset(new FireworkGenerator("firework", particle, particle->getPos(), 8));
 
 	Firework* fire = new Firework(new Particle(pose, vel, damp, acc, mass, time) , generator);
-	fire->setColor(Vector4{ 0.0f, 0.0f, 1.0f, 1 });
+	fire->setColor(color);
 	particles.push_back(fire);
 }
 

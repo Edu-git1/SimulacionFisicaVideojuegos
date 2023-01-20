@@ -22,7 +22,6 @@ public:
 	void shoot();
 	void hit(physx::PxActor* actor1, physx::PxActor* actor2);
 	~ZaWarudo();
-	bool checkCollision(SolidParticle* body1, PxRigidStatic* body2);
 protected:
 	PxScene* gScene;
 	PxPhysics* gPhysics;

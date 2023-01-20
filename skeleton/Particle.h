@@ -25,6 +25,7 @@ public:
 	double getMass() { return masa; };
 	double getDamp() { return damp; };
 	double getTime() { return startTime; };
+	Vector4 getColor() { return renderItem->color; };
 	void decreaseTime() { startTime--; };
 	void setColor(Vector4 color) { renderItem->color = color; };
 	bool isAlive() { return alive; };

@@ -205,7 +205,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
-	if (actor1->getName() == "barco" && actor2->getName() == "bala" || actor1->getName() == "bala" && actor2->getName() == "barco")
+	if ((actor1->getName() == "barco" && actor2->getName() == "bala") || (actor1->getName() == "bala" && actor2->getName() == "barco"))
+	{
+		zw->hit(actor1, actor2);
+	}
+	else if ((actor1->getName() == "suelo") && actor2->getName() == "bala" || (actor1->getName() == "bala" && actor2->getName() == "suelo"))
 	{
 		zw->hit(actor1, actor2);
 	}

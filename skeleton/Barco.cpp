@@ -2,16 +2,20 @@
 
 Barco::Barco(PxScene* scene, PxPhysics* physics, Vector3 pos, float t)
 {
-	boat = physics->createRigidDynamic(physx::PxTransform({ 10, 12, 0 }));
+	physx::PxTransform posBarco = physx::PxTransform({ -10, 5, 0 });
+	posBarco.q = physx::PxQuat(-45, physx::PxVec3(0, 1, 0));
+	boat = physics->createRigidDynamic(posBarco);
 	PxRigidBodyExt::updateMassAndInertia(*boat, 200);
 	boatShape = CreateShape(physx::PxBoxGeometry(Vector3(10, 2.5, 10)));
 	boat->attachShape(*boatShape);
 	boat->setName("barco");
 	scene->addActor(*boat);
-	boatRender = new RenderItem(boatShape, boat, { 0.3, 0.3, 0.3, 1 });
+	boatRender = new RenderItem(boatShape, boat, { 0.5, 0.25, 0, 1 });
 	
-	sail = physics->createRigidDynamic(physx::PxTransform({ 10, 20, 0 }));
-	physx::PxRigidBodyExt::updateMassAndInertia(*sail, 1);
+	physx::PxTransform posVela = physx::PxTransform({ -10, 13, 0 });
+	posVela.q = physx::PxQuat(-45, physx::PxVec3(0, 1, 0));
+	sail = physics->createRigidDynamic(posVela);
+	physx::PxRigidBodyExt::updateMassAndInertia(*sail, 50);
 	sailShape = CreateShape(physx::PxBoxGeometry(Vector3(10, 5, 0.1)));
 	sail->attachShape(*sailShape);
 	sail->setName("barco");

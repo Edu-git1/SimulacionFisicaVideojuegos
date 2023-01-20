@@ -29,7 +29,7 @@ public:
 	void activateFog() { fogGenerator->setActive(); };
 	bool isFogActive() { return fogGenerator->isActive(); };
 
-	void fireworkSystem(Vector3 pos);
+	void fireworkSystem(Vector3 pos, Vector4 color);
 	void activateFirework() { fireworkGenerator->setActive(); };
 	bool isFireworkActive() { return fireworkGenerator->isActive(); };
 

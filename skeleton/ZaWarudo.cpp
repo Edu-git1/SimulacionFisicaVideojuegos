@@ -9,11 +9,12 @@ ZaWarudo::ZaWarudo(PxScene* scene, PxPhysics* physics)
 	PxShape* shape = CreateShape(PxBoxGeometry(Vector3(200, .5, 200)));
 	suelo->attachShape(*shape);
 	scene->addActor(*suelo);
+	suelo->setName("suelo");
 	sueloRender = new RenderItem(shape, suelo, { 0, 0, 1, 1 });
 	cannon = new Cannon();
 	particleSystem = new ParticleSystem({ 0,0,0 });
 	
-	windGenerator = new SolidWindGenerator({ -0,0, 20 }, 1, .5);
+	windGenerator = new SolidWindGenerator({ 12,0, -15 }, 1, .5);
 	forceGens.push_back(windGenerator);
 
 	bouyancyGenerator = new SolidBuoyancy(1, 1, 0, 60);
@@ -53,11 +54,6 @@ void ZaWarudo::update(double t) {
 	for (auto it = solidParts.begin(); it != solidParts.end();) {
 		if ((*it)->isAlive()) {
 			(*it)->update(t);
-			//if a particle collides with the ground set alive to false
-			if (checkCollision((*it), suelo)) {
-				(*it)->setAlive(false);
-				particleSystem->fireworkSystem((*it)->getPosition());
-			}
 		}
 		if (!(*it)->isAlive()) {
 			forces.deleteRigidRegistry((*it)->getBody());
@@ -101,11 +97,11 @@ void ZaWarudo::shoot()
 	if (shot <= 0) {
 		Shape s = Sphere;
 
-		SolidParticle* fire = new SolidParticle(gScene, gPhysics, cannon->getPos() + Vector3(-2.5, 3, -4), Vector3(0, 0, 0), 10, 5, Vector3(1, 1, 1), s, Vector4(0, 0, 0, 1));
+		SolidParticle* fire = new SolidParticle(gScene, gPhysics, cannon->getPos() + Vector3(-2.5, 3, -4), Vector3(0, 0, 0), 10, 5, Vector3(2, 2, 2), s, Vector4(0, 0, 0, 1));
 
 		//crea una particula solida en la punta del cañon y genera una explosion para dispararla
 
-		SolidExplosionGenerator* exp = new SolidExplosionGenerator(cannon->getPos() - Vector3(-1.3, 3.5, -2), 10.f, 400.f, 0.15);
+		SolidExplosionGenerator* exp = new SolidExplosionGenerator(cannon->getPos() - Vector3(-1.3, 3.5, -2), 10.f, 3000.f, 0.15);
 		forces.addRegistry(exp, fire->getBody());
 		fire->getBody()->setName("bala");
 		solidParts.push_back(fire);
@@ -116,21 +112,26 @@ void ZaWarudo::shoot()
 
 void ZaWarudo::hit(physx::PxActor* actor1, physx::PxActor* actor2)
 {
+	SolidParticle* bala;
 	for (auto it = solidParts.begin(); it != solidParts.end(); it++) {
 		if ((*it)->getBody() == actor1 || (*it)->getBody() == actor2) {
+			bala = (*it);
 			(*it)->setAlive(false);
+			if (actor1->getName() == "suelo" || actor2->getName() == "suelo"){
+				particleSystem->fireworkSystem(bala->getPosition(), { 0,0,1,1 });
+			}
+			else {
+				for (auto it = barcos.begin(); it != barcos.end(); it++) {
+					if ((*it)->getBoat() == actor1 || (*it)->getBoat() == actor2) {
+						(*it)->setAlive(false);
+						particleSystem->fireworkSystem(bala->getPosition(), (*it)->getBoatRender()->color);
+					}
+					else if ((*it)->getSail() == actor1 || (*it)->getSail() == actor2) {
+						(*it)->setAlive(false);
+						particleSystem->fireworkSystem(bala->getPosition(), (*it)->getSailRender()->color);
+					}
+				}
+			}
 		}
 	}
-	for (auto it = barcos.begin(); it != barcos.end(); it++) {
-		if ((*it)->getBoat() == actor1 || (*it)->getBoat() == actor2) {
-			(*it)->setAlive(false);
-		}
-	}
-}
-
-bool ZaWarudo::checkCollision(SolidParticle* body1, PxRigidStatic* body2) {
-	float dist = body1->getPosition().y - body2->getGlobalPose().p.y;
-	if (abs(dist) < 10)
-		return true;
-	else return false;
 }

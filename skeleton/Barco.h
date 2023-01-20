@@ -11,8 +11,8 @@ public:
 	void update(double t);
 	PxRigidBody* getSail() { return sail; };
 	PxRigidBody* getBoat() { return boat; };
-	PxShape* getSailShape() { return sailShape; };
-	PxShape* getBoatShape() { return boatShape; };
+	RenderItem* getSailRender() { return sailRender; };
+	RenderItem* getBoatRender() { return boatRender; };
 	bool isAlive() { return alive; };
 	void setAlive(bool a) { alive = a; };
 	
